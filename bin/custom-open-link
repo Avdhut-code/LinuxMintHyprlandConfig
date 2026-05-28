@@ -1,0 +1,23 @@
+#!/bin/bash
+
+if [ -z "$1" ]; then
+    echo "Error: No argument provided."
+    exit 1
+fi
+
+# Launch Zen with a custom process name in the background
+/usr/bin/env -S bash -c 'exec -a zenlaunch zen --new-tab "$1"' -- "$1" &
+
+# The first hyprctl call is still useless because the window won't exist yet, 
+# but it doesn't hurt. We'll rely on the one after the wait.
+# /usr/local/bin/hyprctl dispatch workspace 2
+
+# Wait until THIS specific renamed process appears
+until pgrep -f "zenlaunch" >/dev/null; do
+    sleep 0.2
+done
+
+notify-send -u low "Web-App-Launcher" "$1 Opened" --icon="$2"
+
+# Now move the window to workspace 2
+/usr/local/bin/hyprctl dispatch workspace 2

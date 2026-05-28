@@ -1,0 +1,48 @@
+window {
+    border: 2px solid white;
+    /* Border color */
+    border-radius: 10px;
+}
+
+#input {
+    color: #bf5ef2 /*#f8f8f2*/;
+    /* Input text color */
+    border: none;
+    padding: 8px;
+    border-radius: 20px;
+}
+
+#outer-box {
+    margin: 10px;
+}
+
+#scroll {
+    margin-top: 10px;
+}
+
+#text {
+    color: grey;
+    /* Default text color */
+    padding: 5px;
+    font-size: 15px;
+}
+
+#entry image {
+    min-width: 32px;
+    min-height: 32px;
+    margin-right: 10px;
+}
+#entry {
+    align-items: center;
+}
+
+
+#entry:selected {
+    align-items: center;
+    /*flex-start | flex-end | baseline | stretch*/
+    background-color: white;
+    /* Selected item background */
+    color: black;
+    /* Selected item text color */
+    border-radius: 4px;
+}

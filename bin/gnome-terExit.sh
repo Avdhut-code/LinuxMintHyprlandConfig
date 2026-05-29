@@ -1,12 +1,9 @@
-#!/usr/bin/env bash
-# safe-exit.sh — Simple confirmation before exiting Hyprland
-
 set -e
 
-kitty \
-  --class exit-hyprland-pass \
-  --title "Exit-hyprland-pass" \
-  sh -c '
+gnome-terminal \
+  --class=exit-hyprland-pass \
+  --title="Exit-hyprland-pass" \
+  -- sh -c '
     clear
     echo "====================================="
     echo "   ⚠️  Exit Hyprland Confirmation ⚠️"
@@ -16,13 +13,12 @@ kitty \
     case "$ans" in
         [Yy]*)
             echo "Exiting..."
-	    sleep 1
+            sleep 0.5
             hyprctl dispatch exit
-	    systemctl poweroff
+	          systemctl poweroff
             ;;
         *)
             echo "Cancelled."
             ;;
     esac
   '
-

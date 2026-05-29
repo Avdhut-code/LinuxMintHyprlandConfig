@@ -3,9 +3,6 @@
 # script version
 VERSION="1.0.0"
 
-# default video file
-DEFAULT_FILE="/home/its_avdhut/Music/shinji-s-mom-sings-u-komm-susser-tod-by-juliuan-chahayed-yt.m4a" 
-
 # how help
 show_help() {
     echo "Usage: $0 [OPTIONS]"
@@ -21,7 +18,6 @@ show_help() {
     echo "  $0 --version , -v"
 }
 
-# play a mp4 or mp3 
 play_video() {
     FILE="$1"
     if [ -z "$FILE" ]; then
@@ -31,9 +27,7 @@ play_video() {
 
     if [ -f "$FILE" ]; then
         echo "Playing video: $FILE"
-        # Run Celluloid in the background, ensuring it continues after the terminal is closed
-	nohup mpv "$FILE" > /dev/null 2>&1 &
-	# nohup celluloid --new-window "$FILE" > /dev/null 2>&1 &
+	    nohup mpv "$FILE" > /dev/null 2>&1 &
         echo "Video is playing in the background. You can close the terminal."
     else
         echo "Error: File '$FILE' does not exist. Please check the path or update the default file."
@@ -41,7 +35,6 @@ play_video() {
     fi
 }
 
-# Parse command-line arguments
 if [ "$#" -eq 0 ]; then
     echo "Error: No arguments provided."
     show_help
@@ -59,12 +52,11 @@ while [[ "$#" -gt 0 ]]; do
             exit 0
             ;;
         --play | -p )
-            # Check if the next argument is provided and not another option
             if [[ -n "$2" && ! "$2" =~ ^- ]]; then
                 play_video "$2"
                 shift
             else
-                play_video # Play the default video
+                play_video
             fi
             ;;
         *)

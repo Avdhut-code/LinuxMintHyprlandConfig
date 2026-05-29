@@ -10,6 +10,16 @@ this is only for **debian** based [mint to be specfic] systems with it having **
 
 __________________________________________________________________________________________
 
+# Installing Hyperland 
+
+if you dont have hyprland, here is a guild to how to do it 
+ - all the steps
+ - with precautions 
+ - steps
+ - waring about how the hyprland is not stable on debian systems
+ - use of hyprctl with its wiki refrence 
+__________________________________________________________________________________________
+
 # Preview Images 
 
 

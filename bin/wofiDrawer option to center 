@@ -1,0 +1,2 @@
+windowrulev2 = float,class:^(wofi)$
+windowrulev2 = center,class:^(wofi)$

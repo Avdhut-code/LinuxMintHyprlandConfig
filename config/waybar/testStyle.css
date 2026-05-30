@@ -1,0 +1,23 @@
+/* Reset basic styling */
+window#waybar {
+    background-color: #5e5f63;
+    color: #ffffff;
+    transition-property: background-color;
+    transition-duration: .5s;
+}
+
+/* Styling for your custom items */
+#custom-item1,
+#custom-item2,
+#custom-item3 {
+    padding: 0 10px;
+    margin: 0 5px;
+    background-color: transparent;
+}
+
+/* Optional: Add a hover effect to see which one you are clicking */
+#custom-item1:hover,
+#custom-item2:hover,
+#custom-item3:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}

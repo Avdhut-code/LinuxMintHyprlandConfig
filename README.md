@@ -6,7 +6,7 @@ ________________________________________________________________________________
 
 # Warning 
 
-this is only for **debian** based [mint to be specfic] systems with it having **Hyprland**
+this is only for ` Debian ` based [mint to be specfic] systems with it having ` Hyprland `
 
 __________________________________________________________________________________________
 
@@ -67,10 +67,65 @@ ________________________________________________________________________________
 
 # Structure of .dotfile
 
-31 may
+my dotfile repo is simple setup at a single place the parent cloned repo folder from where the whole setup is connected , after cloning and running `install.sh` the whole folder gets copied to `~/.local/share/dotFileRepo` from where all the simlinks ar created to appropriate ` User ` specific locations such as 
+    - location
+    - location 
+    - location 
+
+    # file structure preview
+    .
+    ├── .bashrc
+    ├── bin
+    │   ├── brightnessCheck.sh
+    │   ├── codecho.sh
+    │   ├── custom-launch-btop.sh
+    │   ├── custom-open-link.sh
+    │   ├── gnome-terExit.sh
+    │   ├── startup.sh
+    │   └── wofiDrawer.sh
+    ├── config
+    │   ├── hypr
+    │   │   ├── hypridle.conf
+    │   │   ├── hyprland.conf
+    │   │   ├── hyprlock.conf
+    │   │   ├── webappsbinds.conf
+    │   │   └── workspace.conf
+    │   └── wofi
+    │       ├── config
+    │       ├── SearchBarStyle.css
+    │       └── style.css
+    ├── folderStructure.txt
+    ├── icon
+    │   ├── brightnessDecrease.png
+    │   ├── brightnessIncrease.png
+    │   ├── brightnessReset.png
+    │   ├── chatgpt.png
+    │   ├── claude.png
+    │   ├── github-light.png
+    │   ├── google-calendar.png
+    │   ├── google-gemini.png
+    │   ├── google-notebooklm.png
+    │   ├── google-tasks.png
+    │   ├── perplexity.png
+    │   ├── playerctl-play-pause.png
+    │   ├── whatsapp.png
+    │   └── youtube.png
+    ├── install.sh
+    ├── PreviewImage2.png
+    ├── PreviewImage3.png
+    ├── PreviewImage.png
+    ├── README.md
+    ├── tools.conf
+    └── wallpaper
+        ├── wall1.png
+        ├── wall2.png
+        ├── wall3.png
+        ├── wall4.png
+        └── wall5.png
+
+    10 directories, 41 files
 __________________________________________________________________________________________
 
 # Installation
 
 1 june
-__________________________________________________________________________________________

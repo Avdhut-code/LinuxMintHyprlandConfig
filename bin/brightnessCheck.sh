@@ -3,10 +3,9 @@
 DefaultBrightnessLevel=15 
 BUS=2
 
-# Define paths to your custom icons here
-ICON_UP="/home/its_avdhut/.icons/notify-send/brightnessCheck/brightnessIncrease.png"
-ICON_DOWN="/home/its_avdhut/.icons/notify-send/brightnessCheck/brightnessDecrease.png"
-ICON_RESET="/home/its_avdhut/.icons/notify-send/brightnessCheck/brightnessReset.png"
+ICON_UP="icon/brightnessIncrease.png"
+ICON_DOWN="icon/brightnessDecrease.png"
+ICON_RESET="icon/brightnessReset.png"
 
 # Get current value
 CURRENT_VAL=$(sudo ddcutil --bus $BUS getvcp 10 | grep -oP 'current value =\s+\K\d+')

@@ -1,9 +1,5 @@
 #!/bin/bash
 
-# script version
-VERSION="1.0.0"
-
-# how help
 show_help() {
     echo "Usage: $0 [OPTIONS]"
     echo ""
@@ -48,7 +44,7 @@ while [[ "$#" -gt 0 ]]; do
             exit 0
             ;;
         -v|--version)
-            echo "$0 version $VERSION"
+            echo "$0 version 0.0.1"
             exit 0
             ;;
         --play | -p )

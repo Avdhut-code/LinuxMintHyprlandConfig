@@ -1,0 +1,138 @@
+{
+	"layer": "top",
+	"position": "top",
+	"height": 25,
+	"modules-left": [
+		"custom/place-holder",
+		"hyprland/window",
+		"custom/place-holder"
+	],
+	"modules-right": [
+		"custom/place-holder",
+		"network",
+		"custom/place-holder",
+		"temperature",
+		"custom/place-holder",
+		"pulseaudio",
+		"custom/place-holder",
+		"clock",
+		"custom/place-holder",
+		"custom/notification",
+		"custom/place-holder",
+		"custom/brightness",
+		"custom/place-holder",
+		"custom/Menu"
+	],
+	"modules-center": [
+		"hyprland/workspaces"
+	],
+	"hyprland/workspaces": {
+		"on-click": "activate",
+		"format": "{icon}",
+		"format-icons": {
+			"default": "",
+			"1": "1",
+			"2": "2",
+			"3": "3",
+			"4": "4",
+			"5": "5",
+			"6": "6",
+			"7": "Music",
+			"8": "System",
+			"9": "Gaming",
+			"10": "Movie",
+			"active": "󱓻"
+		},
+		"persistent-workspaces": {
+			"1": [],
+			"2": [],
+			"3": [],
+			"4": [],
+			"5": []
+		}
+	},
+	"custom/place-holder": {
+		"format": "  |  ",
+		"tooltip": "nothing here."
+	},
+	"hyprland/window": {
+		"format": "{title}"
+	},
+	"clock": {
+		"format": "{:%a %b %d , %I:%M %p}",
+		"on-click": "gnome-calendar"
+	},
+	"network": {
+		"format-wifi": " how the fuck ar yu running on wifi on your PC??",
+		"format-ethernet": " Online",
+		"format-disconnected": "󰤭 Offline",
+		"on-click": "nm-connection-editor"
+	},
+	"pulseaudio": {
+		"format": "{volume}%",
+		"format-muted": "Muted",
+		"on-click": "pavucontrol"
+	},
+	"temperature": {
+		"hwmon-path": "/sys/class/hwmon/hwmon1/temp1_input", // Update based on your system!
+		"critical-threshold": 75,
+		"format": " {temperatureC}°C",
+		"tooltip": false,
+		"on-click": "hyprctl dispatch workspace 8"
+	},
+	"custom/text_editor": {
+		"format": "# textEditor",
+		"tooltip": "open text editor.",
+		"on-click": "xed"
+	},
+	"custom/Menu": {
+		"format": "[#]  ",
+		"tooltip": "for killing rogue window.",
+		"on-click": "notify-send -u low 'does nothing'"
+	},
+	"custom/notification": {
+		"tooltip": false,
+		"format": "{icon}",
+		"format-icons": {
+			"notification": "<span foreground='red'><sup></sup></span>",
+			"none": "",
+			"dnd-notification": "<span foreground='red'><sup></sup></span>",
+			"dnd-none": ""
+		},
+		"return-type": "json",
+		"exec-if": "which swaync-client",
+		"exec": "swaync-client -swb",
+		"on-click": "swaync-client -t -sw",
+		"on-mouseenter": "swaync-client -op", // Opens the panel on hover
+		"on-mouseleave": "swaync-client -cp", // Closes the panel when mouse leaves icon
+		"escape": true
+	},
+	"tray": {
+		"spacing": 2
+	},
+	"group/tray-expander": {
+		"orientation": "horizontal",
+		"drawer": {
+			"transition-duration": 600,
+			"children-class": "tray-group-item"
+		},
+		"modules": [
+			"custom/expand-icon",
+			"tray"
+		]
+	},
+	"custom/expand-icon": {
+		"format": "# setUpRunTools",
+		"tooltip": false
+	},
+	"custom/brightness": {
+		// "exec": "brightnessCheck",
+		"return-type": "",
+		"format": "󰃠  {}%",
+		"interval": "once",
+		"on-click": "/usr/local/bin/brightnessCheck resetToDefault",
+		"on-scroll-up": "/usr/bin/ddcutil setvcp 10 + 5",
+		"on-scroll-down": "/usr/bin/ddcutil setvcp 10 - 5",
+		"signal": 10
+	}
+}

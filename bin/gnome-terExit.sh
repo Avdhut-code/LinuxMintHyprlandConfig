@@ -5,9 +5,9 @@ gnome-terminal \
   --title="Exit-hyprland-pass" \
   -- sh -c '
     clear
-    echo "====================================="
-    echo "   ⚠️  Exit Hyprland Confirmation ⚠️"
-    echo "====================================="
+    echo "┌───────────────────────────────────────────────┐"
+    echo "│          Switch-Off / Exit Hyprland ?         │"
+    echo "└───────────────────────────────────────────────┘"
     echo
     read -rp "Are you sure you want to exit Hyprland? [y/N]: " ans
     case "$ans" in

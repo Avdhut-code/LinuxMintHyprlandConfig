@@ -86,9 +86,9 @@
 		"on-click": "xed"
 	},
 	"custom/Menu": {
-		"format": "[#]  ",
+		"format": "☰  ",
 		"tooltip": "for killing rogue window.",
-		"on-click": "notify-send -u low 'does nothing'"
+		"on-click": "wofi --show drun"
 	},
 	"custom/notification": {
 		"tooltip": false,
@@ -126,8 +126,9 @@
 		"tooltip": false
 	},
 	"custom/brightness": {
-		// "exec": "brightnessCheck",
+		"exec": "/usr/local/bin/brightnessCheck",
 		"return-type": "",
+		// "format": "󰃠  { }%",
 		"format": "󰃠  {}%",
 		"interval": "once",
 		"on-click": "/usr/local/bin/brightnessCheck resetToDefault",

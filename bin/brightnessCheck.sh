@@ -2,43 +2,54 @@
 
 DefaultBrightnessLevel=15 
 BUS=2
+CACHE_FILE="/tmp/current_brightness"
 
-ICON_UP="icon/brightnessIncrease.png"
-ICON_DOWN="icon/brightnessDecrease.png"
-ICON_RESET="icon/brightnessReset.png"
+ICON_UP="/home/its_avdhut/.icons/notify-send/brightnessCheck/brightnessIncrease.png"
+ICON_DOWN="/home/its_avdhut/.icons/notify-send/brightnessCheck/brightnessDecrease.png"
+ICON_RESET="/home/its_avdhut/.icons/notify-send/brightnessCheck/brightnessReset.png"
 
-# Get current value
-CURRENT_VAL=$(sudo ddcutil --bus $BUS getvcp 10 | grep -oP 'current value =\s+\K\d+')
+if [ -z "$1" ]; then
+    if [ -f "$CACHE_FILE" ]; then
+        cat "$CACHE_FILE"
+    else
+        CURRENT_VAL=$(sudo ddcutil --bus $BUS getvcp 10 | grep -oP 'current value =\s+\K\d+')
+        echo "$CURRENT_VAL" > "$CACHE_FILE"
+        echo "$CURRENT_VAL"
+    fi
+    exit 0
+fi
+
+if [ -f "$CACHE_FILE" ]; then
+    CURRENT_VAL=$(cat "$CACHE_FILE")
+else
+    CURRENT_VAL=$(sudo ddcutil --bus $BUS getvcp 10 | grep -oP 'current value =\s+\K\d+')
+fi
+
+if ! [[ "$CURRENT_VAL" =~ ^[0-9]+$ ]]; then
+    CURRENT_VAL=$DefaultBrightnessLevel
+fi
 
 if [ "$1" != "resetToDefault" ]; then
-    # Calculate and clamp
     NEW_VAL=$(( CURRENT_VAL $1 $2 ))
     [ "$NEW_VAL" -gt 100 ] && NEW_VAL=100
     [ "$NEW_VAL" -lt 0 ] && NEW_VAL=0
 
-    # Apply change
-    if [ "$NEW_VAL" -ne "$CURRENT_VAL" ]; then
-        sudo /usr/bin/ddcutil --bus $BUS setvcp 10 "$NEW_VAL"
-    fi
-
-    # Check for + or - to set the icon
     if [ "$1" == "+" ]; then
         ICON=$ICON_UP
     else
         ICON=$ICON_DOWN
     fi
-
     MSG="Current Level: ${NEW_VAL}%"
-
 else 
-    # Reset Logic
     NEW_VAL=$DefaultBrightnessLevel
-    sudo /usr/bin/ddcutil --bus $BUS setvcp 10 $NEW_VAL
     ICON=$ICON_RESET
     MSG="Reset to Level: ${NEW_VAL}%"
 fi
 
-# Global updates (Shared by both branches)
-echo "$NEW_VAL" > /tmp/current_brightness
-pkill -RTMIN+10 waybar # to Reset  the value at the waybar 
-notify-send -t 1500 -i "$ICON" "Brightness" "$MSG" 
+echo "$NEW_VAL" > "$CACHE_FILE"
+
+pkill -RTMIN+10 waybar 
+
+notify-send -r 9999 -t 1500 -i "$ICON" "Brightness" "$MSG"
+
+sudo /usr/bin/ddcutil --bus $BUS setvcp 10 "$NEW_VAL" &>/dev/null

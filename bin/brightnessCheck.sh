@@ -4,9 +4,9 @@ DefaultBrightnessLevel=15
 BUS=2
 CACHE_FILE="/tmp/current_brightness"
 
-ICON_UP="/home/its_avdhut/.icons/notify-send/brightnessCheck/brightnessIncrease.png"
-ICON_DOWN="/home/its_avdhut/.icons/notify-send/brightnessCheck/brightnessDecrease.png"
-ICON_RESET="/home/its_avdhut/.icons/notify-send/brightnessCheck/brightnessReset.png"
+ICON_UP="icon/brightnessIncrease.png"
+ICON_DOWN="icon/brightnessDecrease.png"
+ICON_RESET="icon/brightnessReset.png"
 
 if [ -z "$1" ]; then
     if [ -f "$CACHE_FILE" ]; then

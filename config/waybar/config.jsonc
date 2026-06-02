@@ -8,6 +8,7 @@
 		"custom/place-holder"
 	],
 	"modules-right": [
+		// "custom/test-widget",
 		"custom/place-holder",
 		"network",
 		"custom/place-holder",
@@ -128,12 +129,15 @@
 	"custom/brightness": {
 		"exec": "/usr/local/bin/brightnessCheck",
 		"return-type": "",
-		// "format": "󰃠  { }%",
 		"format": "󰃠  {}%",
 		"interval": "once",
 		"on-click": "/usr/local/bin/brightnessCheck resetToDefault",
 		"on-scroll-up": "/usr/bin/ddcutil setvcp 10 + 5",
 		"on-scroll-down": "/usr/bin/ddcutil setvcp 10 - 5",
 		"signal": 10
-	}
+	},
+	// "custom/test-widget": {
+	// 	"on-click": "notify-send -i 'icon/youtube.png' 'Hello' 'This is a test notification.'",
+	// 	"format": "CLICK ME"
+	// }
 }

@@ -4,15 +4,15 @@ DefaultBrightnessLevel=15
 BUS=2
 CACHE_FILE="/tmp/current_brightness"
 
-ICON_UP="/home/its_avdhut/.icons/notify-send/brightnessCheck/brightnessIncrease.png"
-ICON_DOWN="/home/its_avdhut/.icons/notify-send/brightnessCheck/brightnessDecrease.png"
-ICON_RESET="/home/its_avdhut/.icons/notify-send/brightnessCheck/brightnessReset.png"
+ICON_UP="icon/brightnessIncrease.png"
+ICON_DOWN="icon/brightnessDecrease.png"
+ICON_RESET="icon/brightnessReset.png"
 
 if [ -z "$1" ]; then
     if [ -f "$CACHE_FILE" ]; then
         cat "$CACHE_FILE"
     else
-        CURRENT_VAL=$(sudo ddcutil --bus $BUS getvcp 10 | grep -oP 'current value =\s+\K\d+')
+        CURRENT_VAL=$(ddcutil --bus $BUS getvcp 10 | grep -oP 'current value =\s+\K\d+')
         echo "$CURRENT_VAL" > "$CACHE_FILE"
         echo "$CURRENT_VAL"
     fi
@@ -22,7 +22,7 @@ fi
 if [ -f "$CACHE_FILE" ]; then
     CURRENT_VAL=$(cat "$CACHE_FILE")
 else
-    CURRENT_VAL=$(sudo ddcutil --bus $BUS getvcp 10 | grep -oP 'current value =\s+\K\d+')
+    CURRENT_VAL=$(ddcutil --bus $BUS getvcp 10 | grep -oP 'current value =\s+\K\d+')
 fi
 
 if ! [[ "$CURRENT_VAL" =~ ^[0-9]+$ ]]; then
@@ -52,4 +52,4 @@ pkill -RTMIN+10 waybar
 
 notify-send -r 9999 -t 1500 -i "$ICON" "Brightness" "$MSG"
 
-sudo /usr/bin/ddcutil --bus $BUS setvcp 10 "$NEW_VAL" &>/dev/null
+/usr/bin/ddcutil --bus $BUS setvcp 10 "$NEW_VAL" &>/dev/null

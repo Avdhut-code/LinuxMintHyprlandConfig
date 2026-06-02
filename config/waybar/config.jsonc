@@ -136,8 +136,8 @@
 		"on-scroll-down": "/usr/bin/ddcutil setvcp 10 - 5",
 		"signal": 10
 	},
-	// "custom/test-widget": {
-	// 	"on-click": "notify-send -i 'icon/youtube.png' 'Hello' 'This is a test notification.'",
-	// 	"format": "CLICK ME"
-	// }
+	"custom/test-widget": {
+		"on-click": "notify-send -i '$HOME/.local/share/LinuxMintHyprlandConfig/icon/hyprland.png' 'Hello' 'This is a test notification.'",
+		"format": "TEST CLICK ME"
+	}
 }

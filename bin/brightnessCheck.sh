@@ -4,9 +4,9 @@ DefaultBrightnessLevel=15
 BUS=2
 CACHE_FILE="/tmp/current_brightness"
 
-ICON_UP="icon/brightnessIncrease.png"
-ICON_DOWN="icon/brightnessDecrease.png"
-ICON_RESET="icon/brightnessReset.png"
+ICON_UP="$HOME/.local/share/LinuxMintHyprlandConfig/icon/brightnessIncrease.png"
+ICON_DOWN="$HOME/.local/share/LinuxMintHyprlandConfig/icon/brightnessDecrease.png"
+ICON_RESET="$HOME/.local/share/LinuxMintHyprlandConfig/icon/brightnessReset.png"
 
 if [ -z "$1" ]; then
     if [ -f "$CACHE_FILE" ]; then

@@ -1,1 +1,0 @@
-# here we remove the all the created simlinks and folder simlinks of config folder and remove the origianl folders into there real place         

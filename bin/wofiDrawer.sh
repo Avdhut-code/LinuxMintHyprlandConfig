@@ -24,7 +24,7 @@
 USER_INPUT=$(
   wofi \
     --dmenu \
-    --style "/home/its_avdhut/.config/wofi/SearchBarStyle.css"
+    --style "$HOME/.local/share/LinuxMintHyprlandConfig/config/wofi/SearchBarStyle.css"
 )
 
 # Exit if empty

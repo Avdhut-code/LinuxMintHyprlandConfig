@@ -11,12 +11,13 @@ YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m'
 
-# Script metadata
-REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-BACKUP_DIR="${REPO_ROOT}/OriginalConfigFolders"
+# Script metadata & Permanent Paths
+ORIGINAL_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+TARGET_DIR="${HOME}/.local/share/LinuxMintHyprlandConfig"
+BACKUP_DIR="${TARGET_DIR}/OriginalConfigFolders"
 BACKUP_TIMESTAMP=$(date +%Y-%m-%d_%H-%M-%S)
 BACKUP_PATH="${BACKUP_DIR}/backup_${BACKUP_TIMESTAMP}"
-MANIFEST_FILE="${REPO_ROOT}/uninstall-manifest.txt"
+MANIFEST_FILE="${TARGET_DIR}/uninstall-manifest.txt"
 
 # Counters
 SYMLINKS_CREATED=0
@@ -61,11 +62,11 @@ exit_with_error() {
 check_environment() {
   log_section "Pre-Installation Checks"
 
-  if [ ! -f "${REPO_ROOT}/README.md" ] || [ ! -d "${REPO_ROOT}/config" ]; then
+  if [ ! -f "${ORIGINAL_DIR}/README.md" ] || [ ! -d "${ORIGINAL_DIR}/config" ]; then
     exit_with_error "Script must be run from repository root directory"
   fi
 
-  log_success "Running from correct directory: ${REPO_ROOT}"
+  log_success "Running from correct directory: ${ORIGINAL_DIR}"
 
   if ! grep -q "^ID=.*debian\|^ID=linuxmint" /etc/os-release 2>/dev/null; then
     exit_with_error "This script only supports Debian-based systems (Linux Mint, Ubuntu, etc.)"
@@ -139,6 +140,30 @@ prompt_optional_packages() {
   done
 
   log_success "Optional packages installed/verified"
+}
+
+# ============================================================================
+# RELOCATE DOTFILES
+# ============================================================================
+
+relocate_repository() {
+  log_section "Relocating Dotfiles Suite"
+  
+  if [ "$ORIGINAL_DIR" == "$TARGET_DIR" ]; then
+    log_info "Already running from target directory. Skipping copy."
+    return
+  fi
+
+  log_info "Moving suite to permanent home: $TARGET_DIR"
+  mkdir -p "$TARGET_DIR"
+  
+  # Copy all visible files and directories
+  cp -r "$ORIGINAL_DIR"/* "$TARGET_DIR/"
+  
+  # Copy hidden files (like .git) safely
+  cp -r "$ORIGINAL_DIR"/.[^.]* "$TARGET_DIR/" 2>/dev/null || true
+  
+  log_success "Dotfiles centralized. All future operations will use $TARGET_DIR"
 }
 
 # ============================================================================
@@ -262,28 +287,28 @@ create_script_symlink() {
 create_all_symlinks() {
   log_section "Creating Symlinks"
 
-  # Config directories
+  # Config directories (Linking from TARGET_DIR now)
   log_info "Config directories:"
-  create_dir_symlink "${REPO_ROOT}/config/hypr" "${HOME}/.config/hypr"
-  create_dir_symlink "${REPO_ROOT}/config/waybar" "${HOME}/.config/waybar"
-  create_dir_symlink "${REPO_ROOT}/config/wofi" "${HOME}/.config/wofi"
-  create_dir_symlink "${REPO_ROOT}/config/btop" "${HOME}/.config/btop"
+  create_dir_symlink "${TARGET_DIR}/config/hypr" "${HOME}/.config/hypr"
+  create_dir_symlink "${TARGET_DIR}/config/waybar" "${HOME}/.config/waybar"
+  create_dir_symlink "${TARGET_DIR}/config/wofi" "${HOME}/.config/wofi"
+  create_dir_symlink "${TARGET_DIR}/config/btop" "${HOME}/.config/btop"
 
   # Scripts to ~/.local/bin
   log_info "Scripts to ~/.local/bin:"
   mkdir -p "${HOME}/.local/bin"
-  for script in "${REPO_ROOT}"/bin/*.sh; do
+  for script in "${TARGET_DIR}"/bin/*.sh; do
     script_name=$(basename "$script" .sh)
     create_script_symlink "$script" "${HOME}/.local/bin/$script_name"
   done
 
   # GTK Theme
   log_info "GTK theme:"
-  create_dir_symlink "${REPO_ROOT}/theme/gtkThemes/Graphite-Dark" "${HOME}/.themes/Graphite-Dark"
+  create_dir_symlink "${TARGET_DIR}/theme/gtkThemes/Graphite-Dark" "${HOME}/.themes/Graphite-Dark"
 
   # Wallpaper directory
   log_info "Wallpaper directory:"
-  create_dir_symlink "${REPO_ROOT}/wallpaper" "${HOME}/.config/wallpaper"
+  create_dir_symlink "${TARGET_DIR}/wallpaper" "${HOME}/.config/wallpaper"
 
   log_success "Created $SYMLINKS_CREATED symlink(s)"
 }
@@ -304,23 +329,19 @@ configure_bashrc() {
     return
   fi
 
-  cat >> "${HOME}/.bashrc" << 'EOF'
+  cat >> "${HOME}/.bashrc" << EOF
 
 # === HYPRLAND CONFIG START ===
-export PATH="$HOME/.local/bin:$PATH"
+export PATH="\$HOME/.local/bin:\$PATH"
 
-# Derive REPO_ROOT from the hypr config symlink
-if [ -L "$HOME/.config/hypr" ]; then
-  export REPO_ROOT="$(cd "$(readlink "$HOME/.config/hypr")" && cd .. && pwd)"
-else
-  export REPO_ROOT="$HOME/.config/hypr"
-fi
+# Point to the permanent dotfiles suite location
+export REPO_ROOT="$TARGET_DIR"
 
 # Brightness level (default)
-export BRIGHTNESS=$(brightnessCheck 2>/dev/null || echo "15")
+export BRIGHTNESS=\$(brightnessCheck 2>/dev/null || echo "15")
 
 # System tools environment variables
-export CURRENT_WALLPAPER="${REPO_ROOT}/wallpaper/wall1.png"
+export CURRENT_WALLPAPER="${TARGET_DIR}/wallpaper/wall1.png"
 export DEFAULT_FILE=""
 
 # Minimal terminal prompt (purple color)
@@ -382,13 +403,13 @@ install_obsidian_theme() {
 
   if [ -n "$vault_path" ]; then
     log_info "Found Obsidian vault at: $vault_path"
-    cp -r "${REPO_ROOT}/theme/Obsidian/pitchBlack" "${vault_path}/themes/"
+    cp -r "${TARGET_DIR}/theme/Obsidian/pitchBlack" "${vault_path}/themes/"
     log_success "Obsidian theme installed"
   else
     log_warning "Obsidian vault not found in standard locations"
     read -p "Enter custom vault path (or press Enter to skip): " custom_vault
     if [ -n "$custom_vault" ] && [ -d "$custom_vault/themes" ]; then
-      cp -r "${REPO_ROOT}/theme/Obsidian/pitchBlack" "${custom_vault}/themes/"
+      cp -r "${TARGET_DIR}/theme/Obsidian/pitchBlack" "${custom_vault}/themes/"
       log_success "Obsidian theme installed at: $custom_vault"
     else
       log_info "Obsidian theme installation skipped"
@@ -455,6 +476,7 @@ show_install_summary() {
 ║       LinuxMintHyprlandConfig Installation Summary         ║
 ╚════════════════════════════════════════════════════════════╝
 
+✓ Suite Centralized To:        $TARGET_DIR
 ✓ Packages Installed/Verified: $PACKAGES_INSTALLED
 ✓ Configurations Backed Up:    $CONFIGS_BACKED_UP
 ✓ Symlinks Created:            $SYMLINKS_CREATED
@@ -478,7 +500,7 @@ IMPORTANT NEXT STEPS:
    • Or press Alt+F2 to reload Hyprland
 
 4. UNINSTALLATION:
-   ${REPO_ROOT}/uninstall.sh
+   ${TARGET_DIR}/uninstall.sh
 
 NEXT STEPS:
 ────────────────────────────────────────────────────────────
@@ -499,10 +521,11 @@ main() {
   log_section "LinuxMintHyprlandConfig Installation"
 
   echo "This script will:"
+  echo "  • Relocate suite to ~/.local/share/LinuxMintHyprlandConfig"
   echo "  • Install system packages (requires sudo)"
   echo "  • Create symlinks in ~/.local/bin (user-local, no sudo)"
   echo "  • Create symlinks in ~/.config (user-local, no sudo)"
-  echo "  • Configure .bashrc with environment variables"
+  echo "  • Configure .bashrc with safe environment variables"
   echo "  • Apply GTK theme"
   echo "  • Back up existing configurations"
   echo ""
@@ -517,6 +540,7 @@ main() {
 
   check_environment
   install_system_packages
+  relocate_repository
   configure_permissions
   backup_existing_configs
   create_all_symlinks

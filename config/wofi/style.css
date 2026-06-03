@@ -5,7 +5,9 @@ window {
 }
 
 #input {
-    color: #bf5ef2 /*#f8f8f2*/;
+    color: #bf5ef2
+        /*#f8f8f2*/
+    ;
     /* Input text color */
     border: none;
     padding: 8px;
@@ -32,6 +34,7 @@ window {
     min-height: 32px;
     margin-right: 10px;
 }
+
 #entry {
     align-items: center;
 }

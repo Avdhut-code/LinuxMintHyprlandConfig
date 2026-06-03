@@ -58,7 +58,7 @@ Clear out any previous empty clones and pull the active installer files targetin
 ```bash
 cd ~
 rm -rf Ubuntu-Hyprland
-git clone -b 24.04 --depth 1 https://github.com.git
+git clone -b 24.04 --depth 1 https://github.com.git 
 ```
 
 ### For Linux Mint 21:

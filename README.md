@@ -212,9 +212,3 @@ my dotfile repo is simple setup at a single place the parent cloned repo folder 
         └── wall5.png
 
     10 directories, 41 files
-
----
-
-# Installation
-
-1 june

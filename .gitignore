@@ -1,1 +1,16 @@
+# Installation & Backup Artifacts
+uninstall-manifest.txt
 someSelfInstruction.txt
+OriginalConfigFolders/
+
+# System & IDE
+.DS_Store
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+
+# OS
+Thumbs.db
+.env.local

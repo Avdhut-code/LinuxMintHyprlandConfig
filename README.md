@@ -29,7 +29,7 @@ This guide outlines how to install the Hyprland Wayland compositor on Linux Mint
 > [!NOTE]
 > **Credits & Respect to the Author:** This setup utilizes the incredible work, automation scripts, and configurations maintained by **JaKooLit**. Please consider starring the original repository to support the developer.
 >
-> - **Original Repository:** [JaKooLit/Ubuntu-Hyprland](https://github.com)
+> - **Original Repository:** [JaKooLit/Ubuntu-Hyprland](https://github.com/JaKooLit/Ubuntu-Hyprland)
 
 ---
 

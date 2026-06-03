@@ -83,14 +83,11 @@ install_system_packages() {
   log_section "System Package Installation"
 
   CORE_PACKAGES=(
-    hyprland hyprlock hypridle waybar wofi
-    ddcutil swaybg playerctl amixer btop swaync
-    libnotify gsettings-desktop-schemas dconf-cli
-    gnome-terminal nemo xed git
+hyprland hyprlock hypridle waybar wofi libnotify swaync swaybg gsettings-desktop-schemas dconf-cli amixer playerctl gnome-terminal nemo xed git ddcutil btop
   )
 
   OPTIONAL_PACKAGES=(
-    code obsidian mpv gnome-calendar pavucontrol
+      obsidian mpv gnome-calendar pavucontrol
   )
 
   if ! sudo -v; then

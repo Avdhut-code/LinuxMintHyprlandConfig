@@ -127,13 +127,13 @@
 		"tooltip": false
 	},
 	"custom/brightness": {
-		"exec": "/usr/local/bin/brightnessCheck",
+		"exec": "$HOME/.local/share/LinuxMintHyprlandConfig/bin/brightnessCheck.sh",
 		"return-type": "",
 		"format": "󰃠  {}%",
 		"interval": "once",
-		"on-click": "/usr/local/bin/brightnessCheck resetToDefault",
-		"on-scroll-up": "/usr/bin/ddcutil setvcp 10 + 5",
-		"on-scroll-down": "/usr/bin/ddcutil setvcp 10 - 5",
+		"on-click": "$HOME/.local/share/LinuxMintHyprlandConfig/bin/brightnessCheck.sh resetToDefault",
+		"on-scroll-up": "$HOME/.local/share/LinuxMintHyprlandConfig/bin/brightnessCheck.sh increase",
+		"on-scroll-down": "$HOME/.local/share/LinuxMintHyprlandConfig/bin/brightnessCheck.sh decrease",
 		"signal": 10
 	},
 	"custom/test-widget": {

@@ -1,6 +1,5 @@
 # Installation & Backup Artifacts
 uninstall-manifest.txt
-someSelfInstruction.txt
 OriginalConfigFolders/
 
 # System & IDE
@@ -14,3 +13,7 @@ OriginalConfigFolders/
 # OS
 Thumbs.db
 .env.local
+
+# for me as instructions
+demoInstall.sh
+someSelfInstruction.txt

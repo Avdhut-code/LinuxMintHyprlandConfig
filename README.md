@@ -355,39 +355,39 @@ LinuxMintHyprlandConfig/
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                      Core Components                             │
+│                      Core Components                            │
 ├─────────────────────────────────────────────────────────────────┤
-│                                                                  │
-│  .bashrc (Shell)                                                 │
+│                                                                 │
+│  .bashrc (Shell)                                                │
 │  ├─ Loads environment variables for system tools                │
 │  ├─ Defines aliases & custom functions                          │
 │  ├─ Sets BRIGHTNESS for brightness monitor                      │
 │  └─ Sets CURRENT_WALLPAPER path                                 │
-│                                                                  │
-│  config/hypr/ (Hyprland Compositor)                              │
+│                                                                 │
+│  config/hypr/ (Hyprland Compositor)                             │
 │  ├─ hyprland.conf → Calls bin/startup.sh (exec-once)            │
 │  ├─ Binds keybinds to wofiDrawer.sh                             │
 │  ├─ Configures hypridle.conf for idle behavior                  │
 │  └─ References theme colors & icons from icon/ folder           │
-│                                                                  │
-│  config/waybar/ (Status Bar)                                     │
+│                                                                 │
+│  config/waybar/ (Status Bar)                                    │
 │  ├─ Displays system info from btop                              │
 │  ├─ Integrates with Hyprland workspaces                         │
 │  └─ Applies Graphite-Dark GTK theme styling                     │
-│                                                                  │
-│  bin/ (Utility Scripts)                                          │
+│                                                                 │
+│  bin/ (Utility Scripts)                                         │
 │  ├─ Called by hyprland.conf keybinds                            │
 │  ├─ Symlinked to ~/.local/bin/ for user-wide access             │
 │  └─ Examples: brightness control, app launcher integration      │
-│                                                                  │
-│  theme/ (Visual Consistency)                                     │
+│                                                                 │
+│  theme/ (Visual Consistency)                                    │
 │  ├─ GTK theme applied to GTK apps via gsettings                 │
 │  └─ Obsidian theme optional, installed to Obsidian vault        │
-│                                                                  │
-│  icon/ & wallpaper/ (Resources)                                  │
+│                                                                 │
+│  icon/ & wallpaper/ (Resources)                                 │
 │  ├─ Icons referenced in webappsbinds.conf                       │
 │  └─ Wallpapers selected in .bashrc                              │
-│                                                                  │
+│                                                                 │
 └─────────────────────────────────────────────────────────────────┘
 ```
 

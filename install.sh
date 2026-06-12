@@ -61,9 +61,10 @@ installPackage(){
 		ddcutil \
 		btop \
 		htop \
-		notify-send \
+		libnotify-bin \    
 		pavucontrol \
-		wpctl \
+		wireplumber \      
+		pipewire \
 		swaync \
 		swaybg \
 		playerctl \
@@ -73,9 +74,7 @@ installPackage(){
 		evince \
 		xed \
 		nemo \
-		mpv \
-		obsidian
-
+		mpv
 	sudo apt autoremove -y
 	sudo apt clean -y
 
@@ -84,6 +83,11 @@ installPackage(){
 
 repoCopyToTarget() {
 	log_info "Moving suite to permanent home: $TARGET_DIR"
+
+	if [ "$ORIGINAL_DIR" = "$TARGET_DIR" ]; then
+		log_info "Already in target directory, skipping copy."
+		return
+	fi
 
 	mkdir -p "$TARGET_DIR"
 
@@ -96,8 +100,15 @@ repoCopyToTarget() {
 
 takePermissions() {
 	log_info "Adding user to i2c group for DDC-CI brightness control..."
-    	sudo usermod -aG i2c "$(whoami)"
-    	log_warning "i2c group membership requires logout/login to take effect"
+
+	if ! groups | grep -q i2c; then
+		sudo usermod -aG i2c "$(whoami)"
+		log_warning "i2c group membership requires logout/login to take effect"
+	else
+		log_success "User already in i2c group"
+    		sudo usermod -aG i2c "$(whoami)"
+	fi
+
 
 	log_info "Verifying ddcutil access..."
 
@@ -125,13 +136,13 @@ simlinkCreate() {
 
 	mkdir -p "${HOME}/.local/bin"
 
-	ln -sfn "${TARGET_DIR}/bin/brightnessCheck.sh"		"${HOME}/.local/bin/"
-	ln -sfn "${TARGET_DIR}/bin/codecho.sh" 			"${HOME}/.local/bin/"
-	ln -sfn "${TARGET_DIR}/bin/custom-launch-btop.sh" 	"${HOME}/.local/bin/"
-	ln -sfn "${TARGET_DIR}/bin/custom-open-link.sh"		"${HOME}/.local/bin/"
-	ln -sfn "${TARGET_DIR}/bin/gnome-terExit.sh" 		"${HOME}/.local/bin/"
-	ln -sfn "${TARGET_DIR}/bin/startup.sh" 			"${HOME}/.local/bin/"
-	ln -sfn "${TARGET_DIR}/bin/wofiDrawer.sh" 		"${HOME}/.local/bin/"
+	ln -sfn "${TARGET_DIR}/bin/brightnessCheck.sh"    "${HOME}/.local/bin/brightnessCheck"
+	ln -sfn "${TARGET_DIR}/bin/codecho.sh"            "${HOME}/.local/bin/codecho"
+	ln -sfn "${TARGET_DIR}/bin/custom-launch-btop.sh" "${HOME}/.local/bin/custom-launch-btop"
+	ln -sfn "${TARGET_DIR}/bin/custom-open-link.sh"   "${HOME}/.local/bin/custom-open-link"
+	ln -sfn "${TARGET_DIR}/bin/gnome-terExit.sh"      "${HOME}/.local/bin/gnome-terExit"
+	ln -sfn "${TARGET_DIR}/bin/startup.sh"            "${HOME}/.local/bin/startup"
+	ln -sfn "${TARGET_DIR}/bin/wofiDrawer.sh"         "${HOME}/.local/bin/wofiDrawer"
 
 	log_info "GTK theme:"
 
@@ -152,8 +163,8 @@ bashAppend() {
 	return
 	fi
 
-	if [ -f "$original_dir/bashAppend.txt" ]; then
-		cat "$original_dir/bashAppend.txt" >> "${HOME}/.bashrc"
+	if [ -f "$ORIGINAL_DIR/bashAppend.txt" ]; then
+		cat "$ORIGINAL_DIR/bashAppend.txt" >> "${HOME}/.bashrc"
 		log_success ".bashrc configured with path export and environment variables"
 	else
 		log_warning "bashAppend.txt not found, skipping .bashrc modification"
@@ -188,7 +199,6 @@ hyprshotInstall() {
 		chmod +x "${HOME}/Hyprshot/hyprshot"
 		mkdir -p "${HOME}/.local/bin"
 		ln -sfn "${HOME}/Hyprshot/hyprshot" "${HOME}/.local/bin/hyprshot"
-		echo "HYPRSHOT|${HOME}/.local/bin/hyprshot|${HOME}/Hyprshot/hyprshot" >> "$MANIFEST_FILE"
 		log_success "Hyprshot installed at: ${HOME}/Hyprshot"
 	else
 		log_warning "Failed to clone Hyprshot"
@@ -207,6 +217,26 @@ hyprshotInstall() {
       		log_info "Hyprshot installation skipped"
       	;;
   	esac
+}
+
+installObsidian() {
+    log_info "Installing Obsidian..."
+
+    # get latest version number from GitHub API
+    local version
+    version=$(curl -s https://api.github.com/repos/obsidianmd/obsidian-releases/releases/latest \
+        | grep '"tag_name"' | cut -d'"' -f4 | tr -d 'v')
+
+    local deb_url="https://github.com/obsidianmd/obsidian-releases/releases/download/v${version}/obsidian_${version}_amd64.deb"
+    local deb_path="/tmp/obsidian_${version}.deb"
+
+    if curl -L "$deb_url" -o "$deb_path"; then
+        sudo apt install -y "$deb_path"
+        rm "$deb_path"
+        log_success "Obsidian ${version} installed"
+    else
+        log_warning "Failed to download Obsidian, install it manually from https://obsidian.md"
+    fi
 }
 
 main() {
@@ -229,29 +259,29 @@ main() {
 	exit 0
 	fi
 
-	checkIfDebian
   	log_section "Pre-Installation Checks"
+	checkIfDebian
 
-	installPackage
 	log_section "System Package Installation"
+	installPackage
 
-	repoCopyToTarget
 	log_section "Relocating Dotfiles Suite"
+	repoCopyToTarget
 
-	takePermissions
 	log_section "Permissions & Configuration"
+	takePermissions
 
-	simlinkCreate
 	log_section "Creating Symlinks"
+	simlinkCreate
 
-	bashAppend
 	log_section "configuring .bashrc"
+	bashAppend
 
-	themeApply
 	log_section "Applying GTK Theme"
+	themeApply
 
-	hyprshotInstall
 	log_section "Hyprshot Installation (Optional)"
+	hyprshotInstall
 
   	log_section " Install Done."
 

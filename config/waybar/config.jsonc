@@ -124,13 +124,11 @@
 		"tooltip": false
 	},
 	"custom/brightness": {
-		"exec": "$HOME/.local/share/LinuxMintHyprlandConfig/bin/brightnessCheck.sh",
+		"exec": "brightnessCheck",
 		"return-type": "",
 		"format": "󰃠  {}%",
 		"interval": "once",
-		"on-click": "$HOME/.local/share/LinuxMintHyprlandConfig/bin/brightnessCheck.sh resetToDefault",
-		"on-scroll-up": "$HOME/.local/share/LinuxMintHyprlandConfig/bin/brightnessCheck.sh increase",
-		"on-scroll-down": "$HOME/.local/share/LinuxMintHyprlandConfig/bin/brightnessCheck.sh decrease",
+		"on-click": "brightnessCheck resetToDefault",
 		"signal": 10
 	},
 	"custom/test-widget": {

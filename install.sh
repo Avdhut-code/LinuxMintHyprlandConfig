@@ -55,7 +55,7 @@ checkIfDebian() {
 installPackage(){
 	log_info "Updating package manager..."
 
-	sudo apt update -y
+	sudo apt update 
 	sudo apt install -y \
 		git \
 		ddcutil \
@@ -106,7 +106,6 @@ takePermissions() {
 		log_warning "i2c group membership requires logout/login to take effect"
 	else
 		log_success "User already in i2c group"
-    		sudo usermod -aG i2c "$(whoami)"
 	fi
 
 

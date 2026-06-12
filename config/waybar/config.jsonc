@@ -53,8 +53,7 @@
 		}
 	},
 	"custom/place-holder": {
-		"format": "  |  ",
-		"tooltip": "nothing here."
+		"format": "  |  "
 	},
 	"hyprland/window": {
 		"format": "{title}"
@@ -104,8 +103,6 @@
 		"exec-if": "which swaync-client",
 		"exec": "swaync-client -swb",
 		"on-click": "swaync-client -t -sw",
-		"on-mouseenter": "swaync-client -op", // Opens the panel on hover
-		"on-mouseleave": "swaync-client -cp", // Closes the panel when mouse leaves icon
 		"escape": true
 	},
 	"tray": {
@@ -123,7 +120,7 @@
 		]
 	},
 	"custom/expand-icon": {
-		"format": "# setUpRunTools",
+		"format": "# trayBar",
 		"tooltip": false
 	},
 	"custom/brightness": {

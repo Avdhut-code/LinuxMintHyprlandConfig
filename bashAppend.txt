@@ -12,7 +12,7 @@ export REPO_ROOT="$TARGET_DIR"
 #fi
 
 # env's for walk configuration/customization
-export EDITOR=nvim
+export EDITOR=vim
 export WALK_MAIN_COLOR="#5a5b5e"
 export WALK_STATUS_BAR='[Mode(), Owner(), Size() | PadLeft(7), ModTime() | PadLeft(12)] | join(" ")'
 

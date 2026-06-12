@@ -15,8 +15,8 @@ ENCODED_QUERY=$(printf '%s' "$USER_INPUT" | sed 's/ /+/g')
 
 QUERY_STRING="https://google.com/search?q=$ENCODED_QUERY"
 
+zen --new-tab "$QUERY_STRING"
+
 sleep 1
 
 hyprctl dispatch workspace 2
-
-zen --new-tab "$QUERY_STRING"

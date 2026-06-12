@@ -1,0 +1,261 @@
+#!/bin/bash
+
+set -euo pipefail # if something fails exit
+
+RED='\033[1;31m'
+GREEN='\033[1;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[1;34m'
+NC='\033[0m'
+
+ORIGINAL_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+TARGET_DIR="${HOME}/.local/share/LinuxMintHyprlandConfig"
+
+log_info() {
+  	echo -e "${BLUE}[INFO]${NC} $*"
+}
+
+log_success() {
+  	echo -e "${GREEN}[✓]${NC} $*"
+}
+
+log_warning() {
+  	echo -e "${YELLOW}[!]${NC} $*"
+}
+
+log_error() {
+  	echo -e "${RED}[✗]${NC} $*" >&2
+}
+
+log_section() {
+  	echo -e "\n${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+  	echo -e "${BLUE}$*${NC}"
+  	echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}\n"
+}	
+
+exit_with_error() {
+  	log_error "$1"
+  	exit 1
+}
+
+checkIfDebian() {
+	if [ ! -f "${ORIGINAL_DIR}/README.md" ] || [ ! -d "${ORIGINAL_DIR}/config" ]; then
+		exit_with_error "Script must be run from repository root directory"
+	fi
+
+	log_success "Running from correct directory: ${ORIGINAL_DIR}"
+
+	if ! grep -q "^ID=.*debian\|^ID=linuxmint" /etc/os-release 2>/dev/null; then
+		exit_with_error "This script only supports Debian-based systems (Linux Mint, Ubuntu, etc.)"
+	fi
+
+	log_success "System is Debian-based"
+}
+
+installPackage(){
+	log_info "Updating package manager..."
+
+	sudo apt update -y
+	sudo apt install -y \
+		git \
+		ddcutil \
+		btop \
+		htop \
+		notify-send \
+		pavucontrol \
+		wpctl \
+		swaync \
+		swaybg \
+		playerctl \
+		wofi \
+		gnome-terminal \
+		gnome-calendar \
+		evince \
+		xed \
+		nemo \
+		mpv \
+		obsidian
+
+	sudo apt autoremove -y
+	sudo apt clean -y
+
+	log_success "System packages installed successfully"
+}
+
+repoCopyToTarget() {
+	log_info "Moving suite to permanent home: $TARGET_DIR"
+
+	mkdir -p "$TARGET_DIR"
+
+	cp -r "$ORIGINAL_DIR"/* "$TARGET_DIR/"
+
+	cp -r "$ORIGINAL_DIR"/.[^.]* "$TARGET_DIR/" 2>/dev/null || true
+
+	log_success "Dotfiles centralized. All future operations will use $TARGET_DIR"
+}
+
+takePermissions() {
+	log_info "Adding user to i2c group for DDC-CI brightness control..."
+    	sudo usermod -aG i2c "$(whoami)"
+    	log_warning "i2c group membership requires logout/login to take effect"
+
+	log_info "Verifying ddcutil access..."
+
+	if command -v ddcutil &>/dev/null; then
+		if ddcutil detect >/dev/null 2>&1; then
+			log_success "ddcutil display detected"
+		else
+			log_warning "ddcutil installed but no displays detected (DDC-CI may not be available)"
+		fi
+	fi
+
+	log_success "Permissions set for ~/.local/bin"
+}
+
+simlinkCreate() {
+	mkdir -p "${HOME}/.config"
+
+	log_info "Config directories:"
+	ln -sfn "${TARGET_DIR}/config/hypr" 	"${HOME}/.config/"
+	ln -sfn "${TARGET_DIR}/config/waybar" 	"${HOME}/.config/"
+	ln -sfn "${TARGET_DIR}/config/wofi" 	"${HOME}/.config/"
+	ln -sfn "${TARGET_DIR}/config/btop" 	"${HOME}/.config/"
+
+	log_info "Scripts to ~/.local/bin:"
+
+	mkdir -p "${HOME}/.local/bin"
+
+	ln -sfn "${TARGET_DIR}/bin/brightnessCheck.sh"		"${HOME}/.local/bin/"
+	ln -sfn "${TARGET_DIR}/bin/codecho.sh" 			"${HOME}/.local/bin/"
+	ln -sfn "${TARGET_DIR}/bin/custom-launch-btop.sh" 	"${HOME}/.local/bin/"
+	ln -sfn "${TARGET_DIR}/bin/custom-open-link.sh"		"${HOME}/.local/bin/"
+	ln -sfn "${TARGET_DIR}/bin/gnome-terExit.sh" 		"${HOME}/.local/bin/"
+	ln -sfn "${TARGET_DIR}/bin/startup.sh" 			"${HOME}/.local/bin/"
+	ln -sfn "${TARGET_DIR}/bin/wofiDrawer.sh" 		"${HOME}/.local/bin/"
+
+	log_info "GTK theme:"
+
+	mkdir -p "${HOME}/.themes"
+
+	ln -sfn "${TARGET_DIR}/theme/gtkThemes/Graphite-Dark" "${HOME}/.themes/"
+
+	log_success "Created symlink(s)"
+}
+
+bashAppend() {
+	if [ ! -f "${HOME}/.bashrc" ]; then
+		exit_with_error "~/.bashrc not found"
+	fi
+
+	if grep -q "# === hyprland config start ===" "${HOME}/.bashrc"; then
+		log_info "hyprland configuration already in .bashrc (skipping)"
+	return
+	fi
+
+	if [ -f "$original_dir/bashAppend.txt" ]; then
+		cat "$original_dir/bashAppend.txt" >> "${HOME}/.bashrc"
+		log_success ".bashrc configured with path export and environment variables"
+	else
+		log_warning "bashAppend.txt not found, skipping .bashrc modification"
+	fi
+}
+
+themeApply() {
+	if command -v gsettings &>/dev/null; then
+		log_info "Setting GTK theme to Graphite-Dark..."
+		gsettings set org.gnome.desktop.interface gtk-theme "Graphite-Dark" 2>/dev/null && \
+		log_success "GNOME theme set" || log_warning "Could not set GNOME theme"
+	else
+		log_warning "gsettings not available, theme must be applied manually"
+	fi
+}
+
+hyprshotInstall() {
+	if [ ! -t 0 ]; then
+		log_info "Non-interactive shell detected, skipping."
+	return
+	fi
+
+	echo "  [1] Auto install from GitHub"
+	echo "  [2] Manual install (show instructions)"
+	echo "  [3] Skip"
+	read -rp "Select option [1/2/3]: " choice
+
+	case "$choice" in
+	1)
+	log_info "Cloning Hyprshot..."
+	if git clone https://github.com/Gustash/hyprshot.git "${HOME}/Hyprshot" 2>/dev/null; then
+		chmod +x "${HOME}/Hyprshot/hyprshot"
+		mkdir -p "${HOME}/.local/bin"
+		ln -sfn "${HOME}/Hyprshot/hyprshot" "${HOME}/.local/bin/hyprshot"
+		echo "HYPRSHOT|${HOME}/.local/bin/hyprshot|${HOME}/Hyprshot/hyprshot" >> "$MANIFEST_FILE"
+		log_success "Hyprshot installed at: ${HOME}/Hyprshot"
+	else
+		log_warning "Failed to clone Hyprshot"
+	fi
+	;;
+	2)
+      	echo """
+		Manual Hyprshot Installation:
+			1. git clone https://github.com/Gustash/hyprshot.git ~/Hyprshot
+			2. chmod +x ~/Hyprshot/hyprshot
+			3. mkdir -p ~/.local/bin && ln -s ~/Hyprshot/hyprshot ~/.local/bin/hyprshot
+			4. hyprshot --help 
+	"""
+      	;;
+    	3|*)
+      		log_info "Hyprshot installation skipped"
+      	;;
+  	esac
+}
+
+main() {
+	log_section "LinuxMintHyprlandConfig Installation"
+
+	echo "This script will:"
+	echo "  • Relocate suite to ~/.local/share/LinuxMintHyprlandConfig"
+	echo "  • Install system packages (requires sudo)"
+	echo "  • Create symlinks in ~/.local/bin (user-local, no sudo)"
+	echo "  • Create symlinks in ~/.config (user-local, no sudo)"
+	echo "  • Append to .bashrc with safe environment variables"
+	echo "  • Apply GTK theme with gesttings"
+	echo ""
+
+	read -p "Continue with installation? (y/n) [n]: " -r continue_install
+	continue_install=${continue_install:-n}
+
+	if [[ ! $continue_install =~ ^[Yy]$ ]]; then
+	log_warning "Installation cancelled"
+	exit 0
+	fi
+
+	checkIfDebian
+  	log_section "Pre-Installation Checks"
+
+	installPackage
+	log_section "System Package Installation"
+
+	repoCopyToTarget
+	log_section "Relocating Dotfiles Suite"
+
+	takePermissions
+	log_section "Permissions & Configuration"
+
+	simlinkCreate
+	log_section "Creating Symlinks"
+
+	bashAppend
+	log_section "configuring .bashrc"
+
+	themeApply
+	log_section "Applying GTK Theme"
+
+	hyprshotInstall
+	log_section "Hyprshot Installation (Optional)"
+
+  	log_section " Install Done."
+
+	log_success "Installation completed successfully!"
+}
+
+main "$@"

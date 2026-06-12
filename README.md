@@ -6,19 +6,11 @@ This an custom .dotfile repo for my personal mint-hyprland setup. So its dark, m
 
 # Warning
 
-this is only for `Debian` based [mint to be specfic] systems with it having `Hyprland`
+this is only for `Debian` based [ `linuxmint` to be specfic] systems with it having `Hyprland`
+<!-- 
+if you not using `linuxmint` but debian then remove the `checkIfDebian function call` from install.sh  -->
 
 ---
-
-<!-- # Installing Hyperland
-
-if you dont have hyprland, here is a guild to how to do it
- - all the steps
- - with precautions
- - steps
- - waring about how the hyprland is not stable on debian systems
- - use of hyprctl with its wiki refrence  -->
-
 # Installing Hyprland on Linux Mint
 
 <details>
@@ -58,7 +50,7 @@ Clear out any previous empty clones and pull the active installer files targetin
 ```bash
 cd ~
 rm -rf Ubuntu-Hyprland
-git clone -b 24.04 --depth 1 https://github.com.git 
+git clone -b 24.04 --depth 1 https://github.com/JaKooLit/Ubuntu-Hyprland.git 
 ```
 
 ### For Linux Mint 21:
@@ -66,7 +58,7 @@ git clone -b 24.04 --depth 1 https://github.com.git
 ```bash
 cd ~
 rm -rf Ubuntu-Hyprland
-git clone -b 22.04 --depth 1 https://github.com.git
+git clone -b 22.04 --depth 1 https://github.com/JaKooLit/Ubuntu-Hyprland.git 
 ```
 
 ## Step 4: Run the Installer Script
@@ -99,24 +91,28 @@ The text-based setup menu will guide you through the process:
 
 ### Additional Resources
 
-- **Video Guide Walkthrough:** [How to Install Hyprland on Ubuntu + Linux Mint + Pop Os](https://youtube.com)
+- **Video Guide Walkthrough:** [How to Install Hyprland on Ubuntu + Linux Mint](https://youtube.com)
 
 </details>
 
 ---
+# Installation
 
-# Theme Installation Steps
-
-This section covers the installation of themes included in this dotfiles repository.
-
-## Prerequisites
-
-Before installing themes, ensure the following tools are installed:
+## Quick Start
 
 ```bash
-sudo apt install gsettings-desktop-schemas dconf-cli -y
-```
+# 1. Clone the repository
+git clone https://github.com/yourusername/LinuxMintHyprlandConfig.git
+cd LinuxMintHyprlandConfig
 
+# 2. Run the installation script
+chmod +x install.sh
+./install.sh
+
+# 3. Follow the interactive prompts
+# - Confirm backup of existing configs
+# - Optionally install Obsidian theme
+```
 ## Automatic Installation via `install.sh`
 
 The easiest way to install all components (configs, tools, and themes) is to run the provided installation script:
@@ -127,13 +123,19 @@ chmod +x install.sh
 ./install.sh
 ```
 
-This script will:
-1. ✅ Backup existing configurations to `OriginalConfigFolders/`
-2. ✅ Create symlinks for all configs → `~/.config/`
-3. ✅ Create symlinks for all tools → `~/.local/bin/`
-4. ✅ Install GTK theme → `~/.themes/`
-5. ✅ Set GTK theme as system-wide default via `gsettings`
-6. ✅ Optionally install Obsidian theme (with user prompt)
+This script will:`
+1. ✅ Create symlinks for all configs → `~/.config/`
+2. ✅ Create symlinks for all tools → `~/.local/bin/`
+3. ✅ Install GTK theme → `~/.themes/`
+4. ✅ Set GTK theme as system-wide default via `gsettings`
+5. ✅ Optionally install Hyprshot tool for ScreenShot (with user prompt)
+
+
+---
+
+# Theme Installation Steps
+
+This section covers the installation of themes included in this dotfiles repository.
 
 ## Manual GTK Theme Installation
 
@@ -160,31 +162,6 @@ gsettings set org.cinnamon.desktop.interface gtk-theme "Graphite-Dark"
 gsettings set org.gnome.desktop.interface gtk-theme "Graphite-Dark"
 ```
 
-## Manual Obsidian Theme Installation
-
-The repository includes a **Pitch Black** theme for Obsidian. To install it manually:
-
-### Step 1: Locate Your Obsidian Vault
-
-Find your Obsidian vault directory. Default locations:
-
-- **Linux:** `~/.local/share/obsidian/`
-- **Snap:** `~/snap/obsidian/common/.obsidian/`
-
-### Step 2: Copy Theme to Obsidian Themes Folder
-
-```bash
-# Replace <vault-path> with your actual Obsidian vault location
-cp -r ./theme/Obsidian/pitchBlack "<vault-path>/.obsidian/themes/"
-```
-
-### Step 3: Activate Theme in Obsidian
-
-1. Open Obsidian
-2. Go to **Settings** → **Appearance** → **Themes**
-3. Select **pitchBlack** from the dropdown
-4. Apply
-
 ## Troubleshooting
 
 ### GTK Theme Not Applying
@@ -200,51 +177,14 @@ gsettings set org.cinnamon.desktop.interface gtk-theme "Graphite-Dark"
 # Then log out and log back in
 ```
 
-### Obsidian Theme Not Appearing
-
-**Problem:** Theme folder copied but doesn't show up in Obsidian.
-
-**Solutions:**
-1. Ensure the theme folder is in the correct location:
-   ```bash
-   ls -la "~/.obsidian/themes/pitchBlack/"
-   ```
-2. Restart Obsidian
-3. Check that `manifest.json` exists in the theme folder:
-   ```bash
-   cat "~/.obsidian/themes/pitchBlack/manifest.json"
-   ```
-
-### Permission Denied When Setting Theme
-
-**Problem:** Getting permission errors when running `gsettings` or `install.sh`.
-
-**Solution:**
-```bash
-# Ensure you're not running as root
-# Sudo is only needed for package installation, not for symlinks
-```
-
 ## Reverting Themes
 
-To revert to the original themes after installation:
+To revert to the original themes after installation :
 
-### Revert GTK Theme
-
+Run the command : 
 ```bash
 gsettings reset org.cinnamon.desktop.interface gtk-theme
 ```
-
-### Uninstall All Components (Tools, Configs, Themes)
-
-```bash
-./uninstall.sh
-```
-
-This will:
-- Remove all symlinks
-- Restore original configurations from backups
-- Restore original GTK theme settings
 
 ---
 
@@ -254,7 +194,7 @@ This will:
 
 ---
 
-2.![Second preview Image, with showing the themeing of the editor [xed] and file manger [nemo].](PreviewImage2.png)
+2.![Second preview Image, with showing the theremin of the editor [xed] and file manger [nemo].](PreviewImage2.png)
 
 ---
 
@@ -361,7 +301,6 @@ LinuxMintHyprlandConfig/
 │  .bashrc (Shell)                                                │
 │  ├─ Loads environment variables for system tools                │
 │  ├─ Defines aliases & custom functions                          │
-│  ├─ Sets BRIGHTNESS for brightness monitor                      │
 │  └─ Sets CURRENT_WALLPAPER path                                 │
 │                                                                 │
 │  config/hypr/ (Hyprland Compositor)                             │
@@ -393,52 +332,17 @@ LinuxMintHyprlandConfig/
 
 ---
 
-# Installation
-
-## Quick Start
-
-```bash
-# 1. Clone the repository
-git clone https://github.com/yourusername/LinuxMintHyprlandConfig.git
-cd LinuxMintHyprlandConfig
-
-# 2. Run the installation script
-chmod +x install.sh
-./install.sh
-
-# 3. Follow the interactive prompts
-# - Confirm backup of existing configs
-# - Optionally install Obsidian theme
-```
-
 ## What Gets Installed
 
-| Component | Source | Target | Notes |
-|-----------|--------|--------|-------|
-| **Hyprland Config** | `config/hypr/` | `~/.config/hypr/` | Wayland compositor configuration |
-| **Waybar** | `config/waybar/` | `~/.config/waybar/` | Status bar configuration |
-| **Wofi** | `config/wofi/` | `~/.config/wofi/` | App launcher configuration |
-| **Btop** | `config/btop/` | `~/.config/btop/` | System monitor theme |
-| **Custom Tools** | `bin/` | `~/.local/bin/` | Scripts like brightness, wofi drawer, etc. |
-| **Bash Config** | `.bashrc` | `~/.bashrc` | Shell aliases and environment variables |
-| **GTK Theme** | `theme/gtkThemes/Graphite-Dark/` | `~/.themes/` | Dark GTK+ theme (automatically set) |
-| **Obsidian Theme** | `theme/Obsidian/pitchBlack/` | `~/.config/obsidian/themes/` | Optional theme for Obsidian vault |
-
-## Uninstallation
-
-To remove all installations and restore original configurations:
-
-```bash
-chmod +x uninstall.sh
-./uninstall.sh
-```
-
-This will:
-- Remove all symlinks
-- Restore backed-up original configurations from `OriginalConfigFolders/`
-- Restore original GTK theme settings
-
----
+| Component           | Source                           | Target              | Notes                                      |
+| ------------------- | -------------------------------- | ------------------- | ------------------------------------------ |
+| **Hyprland Config** | `config/hypr/`                   | `~/.config/hypr/`   | Wayland compositor configuration           |
+| **Waybar**          | `config/waybar/`                 | `~/.config/waybar/` | Status bar configuration                   |
+| **Wofi**            | `config/wofi/`                   | `~/.config/wofi/`   | App launcher configuration                 |
+| **Btop**            | `config/btop/`                   | `~/.config/btop/`   | System monitor theme                       |
+| **Custom Tools**    | `bin/`                           | `~/.local/bin/`     | Scripts like brightness, wofi drawer, etc. |
+| **Bash Config**     | `.bashrc`                        | `~/.bashrc`         | Shell aliases and environment variables    |
+| **GTK Theme**       | `theme/gtkThemes/Graphite-Dark/` | `~/.themes/`        | Dark GTK+ theme (automatically set)        |
 
 # Hyprshot Installation & Setup
 
@@ -603,13 +507,7 @@ If missing: `sudo apt install python3`
 
 To remove Hyprshot:
 
-1. **Via uninstall.sh** (Recommended):
-   ```bash
-   ./uninstall.sh
-   ```
-   When prompted: "Remove Hyprshot? (y/n)" → Select **y**
-
-2. **Manual Removal**:
+1. **Manual Removal**:
    ```bash
    # Remove symlink
    rm ~/.local/bin/hyprshot

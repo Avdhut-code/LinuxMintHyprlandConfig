@@ -1,33 +1,32 @@
 # LinuxMintHyprlandConfig
 
-This an custom .dotfile repo for my personal mint-hyprland setup. So its dark, minimal, dosent follow a structure , just stuff randomly everywhere.
+A personal dotfile repo for my Mint + Hyprland setup. Dark, minimal, and opinionated — don't expect things to be neatly organized.
 
 ---
 
-# Warning
-
-this is only for `Debian` based [ `linuxmint` to be specfic] systems with it having `Hyprland`
-<!-- 
-if you not using `linuxmint` but debian then remove the `checkIfDebian function call` from install.sh  -->
+> [!WARNING]
+> This is built specifically for **Debian-based** systems — **Linux Mint** in particular — with **Hyprland** already installed.
+> If you're on a different Debian-based distro, remove the `checkIfDebian` function call from `install.sh` before running it.
 
 ---
+
 # Installing Hyprland on Linux Mint
 
 <details>
-<summary><b>Click to expand/collapse installation steps</b></summary>
+<summary><b>Click to expand installation steps</b></summary>
 
-This guide outlines how to install the Hyprland Wayland compositor on Linux Mint using an automated installation script.
+This guide covers installing the Hyprland Wayland compositor on Linux Mint using an automated script.
 
 > [!NOTE]
-> **Credits & Respect to the Author:** This setup utilizes the incredible work, automation scripts, and configurations maintained by **JaKooLit**. Please consider starring the original repository to support the developer.
+> **Credits:** This setup uses the automation scripts and configurations maintained by **JaKooLit**. Consider starring the original repo to support the developer.
 >
-> - **Original Repository:** [JaKooLit/Ubuntu-Hyprland](https://github.com/JaKooLit/Ubuntu-Hyprland)
+> **Original Repository:** [JaKooLit/Ubuntu-Hyprland](https://github.com/JaKooLit/Ubuntu-Hyprland)
 
 ---
 
 ## Step 1: Prepare System Dependencies
 
-Update your current package lists and install core utilities required for cloning and building the configurations.
+Update your package lists and install the core utilities needed for cloning and building.
 
 ```bash
 sudo apt update && sudo apt upgrade -y
@@ -36,21 +35,19 @@ sudo apt install git make cmake -y
 
 ## Step 2: Identify Your Mint Version Base
 
-Linux Mint releases are built on top of specific Ubuntu LTS bases. You must target the branch matching your Mint version:
+Linux Mint releases are built on top of specific Ubuntu LTS bases. Target the branch that matches your version:
 
-- **Linux Mint 22** is based on **Ubuntu 24.04**
-- **Linux Mint 21 (21.1, 21.2, 21.3)** is based on **Ubuntu 22.04**
+- **Linux Mint 22** → based on **Ubuntu 24.04**
+- **Linux Mint 21 (21.1, 21.2, 21.3)** → based on **Ubuntu 22.04**
 
-## Step 3: Clone the Specific Repository Branch
-
-Clear out any previous empty clones and pull the active installer files targeting your version.
+## Step 3: Clone the Correct Branch
 
 ### For Linux Mint 22:
 
 ```bash
 cd ~
 rm -rf Ubuntu-Hyprland
-git clone -b 24.04 --depth 1 https://github.com/JaKooLit/Ubuntu-Hyprland.git 
+git clone -b 24.04 --depth 1 https://github.com/JaKooLit/Ubuntu-Hyprland.git
 ```
 
 ### For Linux Mint 21:
@@ -58,12 +55,12 @@ git clone -b 24.04 --depth 1 https://github.com/JaKooLit/Ubuntu-Hyprland.git
 ```bash
 cd ~
 rm -rf Ubuntu-Hyprland
-git clone -b 22.04 --depth 1 https://github.com/JaKooLit/Ubuntu-Hyprland.git 
+git clone -b 22.04 --depth 1 https://github.com/JaKooLit/Ubuntu-Hyprland.git
 ```
 
-## Step 4: Run the Installer Script
+## Step 4: Run the Installer
 
-Navigate into the newly cloned project directory, make the installer executable, and run it.
+Navigate into the cloned directory, make the installer executable, and run it.
 
 ```bash
 cd Ubuntu-Hyprland
@@ -71,19 +68,19 @@ chmod +x install.sh
 ./install.sh
 ```
 
-## Step 5: Follow Interactive Prompts & Reboot
+## Step 5: Follow the Interactive Prompts & Reboot
 
-The text-based setup menu will guide you through the process:
+The setup menu will guide you through the process:
 
-1. Enter your `sudo` password when requested to install packages.
-2. Choose options corresponding to your hardware (especially if utilizing an **Nvidia** GPU).
+1. Enter your `sudo` password when prompted.
+2. Choose options matching your hardware — especially if you're on an **Nvidia** GPU.
 3. Select additional features like Waybar or custom GTK themes.
-4. Once completed, reboot your system.
+4. Reboot once complete.
 
 ## Step 6: Log Into Hyprland
 
-1. On your Linux Mint login screen, select your username.
-2. Click the desktop environment/session icon (usually a small gear or emblem near the password field).
+1. On the Linux Mint login screen, select your username.
+2. Click the session icon (usually a small gear near the password field).
 3. Select **Hyprland** from the list.
 4. Enter your password and log in.
 
@@ -91,11 +88,12 @@ The text-based setup menu will guide you through the process:
 
 ### Additional Resources
 
-- **Video Guide Walkthrough:** [How to Install Hyprland on Ubuntu + Linux Mint](https://youtube.com)
+- [How to Install Hyprland on Ubuntu + Linux Mint (Video Guide)](https://youtube.com)
 
 </details>
 
 ---
+
 # Installation
 
 ## Quick Start
@@ -105,58 +103,43 @@ The text-based setup menu will guide you through the process:
 git clone https://github.com/yourusername/LinuxMintHyprlandConfig.git
 cd LinuxMintHyprlandConfig
 
-# 2. Run the installation script
+# 2. Run the install script
 chmod +x install.sh
 ./install.sh
 
 # 3. Follow the interactive prompts
-# - Confirm backup of existing configs
-# - Optionally install Obsidian theme
-```
-## Automatic Installation via `install.sh`
-
-The easiest way to install all components (configs, tools, and themes) is to run the provided installation script:
-
-```bash
-cd ~/LinuxMintHyprlandConfig
-chmod +x install.sh
-./install.sh
 ```
 
-This script will:`
-1. ✅ Create symlinks for all configs → `~/.config/`
-2. ✅ Create symlinks for all tools → `~/.local/bin/`
-3. ✅ Install GTK theme → `~/.themes/`
-4. ✅ Set GTK theme as system-wide default via `gsettings`
-5. ✅ Optionally install Hyprshot tool for ScreenShot (with user prompt)
+## What `install.sh` Does
 
+1. ✅ Creates symlinks for all configs → `~/.config/`
+2. ✅ Creates symlinks for all scripts → `~/.local/bin/`
+3. ✅ Installs GTK theme → `~/.themes/`
+4. ✅ Sets GTK theme system-wide via `gsettings`
+5. ✅ Optionally installs Hyprshot for screenshots
 
 ---
 
-# Theme Installation Steps
+# GTK Theme
 
-This section covers the installation of themes included in this dotfiles repository.
+## Automatic
 
-## Manual GTK Theme Installation
+The install script handles this automatically. Nothing to do.
 
-If you only want to install the **Graphite-Dark** GTK theme manually:
+## Manual Installation
 
-### Step 1: Copy Theme to System Directory
+If you want to install the **Graphite-Dark** theme on its own:
 
 ```bash
 mkdir -p ~/.themes
 cp -r ./theme/gtkThemes/Graphite-Dark ~/.themes/
 ```
 
-### Step 2: Set as System Theme (Linux Mint GUI)
-
-**Via Settings:**
+**Via Linux Mint GUI:**
 1. Open **System Settings** → **Appearance** → **Themes**
 2. Select **Graphite-Dark** from the GTK+ Theme dropdown
-3. Apply changes
 
-**Via Command Line (gsettings):**
-
+**Via command line:**
 ```bash
 gsettings set org.cinnamon.desktop.interface gtk-theme "Graphite-Dark"
 gsettings set org.gnome.desktop.interface gtk-theme "Graphite-Dark"
@@ -164,360 +147,203 @@ gsettings set org.gnome.desktop.interface gtk-theme "Graphite-Dark"
 
 ## Troubleshooting
 
-### GTK Theme Not Applying
-
-**Problem:** Theme appears in Settings but doesn't apply globally.
-
-**Solution:**
+**Theme not applying globally:**
 ```bash
-# Clear cache and reapply
 gsettings reset org.cinnamon.desktop.interface gtk-theme
 gsettings set org.cinnamon.desktop.interface gtk-theme "Graphite-Dark"
-
-# Then log out and log back in
+# Then log out and back in
 ```
 
-## Reverting Themes
-
-To revert to the original themes after installation :
-
-Run the command : 
+**Reverting to default:**
 ```bash
 gsettings reset org.cinnamon.desktop.interface gtk-theme
 ```
 
 ---
 
-# Preview Images
+# Preview
 
-1.![First preview Image, with some level of show casing of this system.](PreviewImage.png)
-
----
-
-2.![Second preview Image, with showing the theremin of the editor [xed] and file manger [nemo].](PreviewImage2.png)
+![Preview 1](PreviewImage.png)
 
 ---
 
-3.![Simple preview image showing nothing basic layout.](PreviewImage3.png)
+![Preview 2](PreviewImage2.png)
 
 ---
 
-# Wallpaper
+![Preview 3](PreviewImage3.png)
+
+---
+
+# Wallpapers
 
 <details>
-  <summary>Wallpaper 1 - Full Blank Background.</summary>
+  <summary>Wallpaper 1 — Full Blank Background</summary>
   <br>
   <img src="wallpaper/wall1.png" alt="Wallpaper 1" width="100%">
 </details>
 
 <details>
-  <summary>Wallpaper 2 - Dark Ocean Current (ig).</summary>
+  <summary>Wallpaper 2 — Dark Ocean Current</summary>
   <br>
   <img src="wallpaper/wall2.png" alt="Wallpaper 2" width="100%">
 </details>
 
 <details>
-  <summary>Wallpaper 3 - Classic Nokia Handshake.</summary>
+  <summary>Wallpaper 3 — Classic Nokia Handshake</summary>
   <br>
   <img src="wallpaper/wall3.png" alt="Wallpaper 3" width="100%">
 </details>
 
 <details>
-  <summary>Wallpaper 4 - Solo Rai Ayanamai.</summary>
+  <summary>Wallpaper 4 — Solo Rei Ayanami</summary>
   <br>
   <img src="wallpaper/wall4.png" alt="Wallpaper 4" width="100%">
 </details>
 
 <details>
-  <summary>Wallpaper 5 - Rai and Asuka Manga Version.</summary>
+  <summary>Wallpaper 5 — Rei and Asuka Manga Version</summary>
   <br>
   <img src="wallpaper/wall5.png" alt="Wallpaper 5" width="100%">
 </details>
-__________________________________________________________________________________________
 
-# Repository Structure Overview
+---
 
-This dotfiles repository follows a **centralized configuration management** approach where all Hyprland, application configs, themes, and custom tools are managed from a single source directory. Using symlinks, all files are linked to their appropriate user-specific locations without duplicating or moving the originals.
+# Repository Structure
 
-## Directory Layout
+All configs, themes, and scripts are managed from a single source directory and linked to their appropriate locations via symlinks — no files are duplicated or moved from the repo.
 
 ```
 LinuxMintHyprlandConfig/
-├── .bashrc                           # Shell configuration (→ ~/.bashrc)
-├── bin/                              # Custom executable scripts (→ ~/.local/bin/)
-│   ├── brightnessCheck.sh           # Brightness level checker (uses ddcutil)
+├── bin/                              # Custom scripts (→ ~/.local/bin/)
+│   ├── brightnessCheck.sh           # Brightness control via ddcutil
 │   ├── startup.sh                   # Hyprland startup script
 │   ├── wofiDrawer.sh                # Wofi app launcher integration
 │   ├── custom-launch-btop.sh        # Custom btop launcher
 │   ├── custom-open-link.sh          # Web link opener
 │   ├── gnome-terExit.sh             # Terminal exit handler
 │   └── codecho.sh                   # Code clipboard utility
-├── config/                           # Application configurations (→ ~/.config/)
-│   ├── hypr/                        # Hyprland Wayland compositor config
-│   │   ├── hyprland.conf            # Main compositor settings
-│   │   ├── hypridle.conf            # Idle behavior & screen lock
-│   │   ├── hyprlock.conf            # Screen lock configuration
-│   │   ├── webappsbinds.conf        # Web app launcher keybindings
+├── config/                           # App configs (→ ~/.config/)
+│   ├── hypr/                        # Hyprland compositor
+│   │   ├── hyprland.conf            # Main config
+│   │   ├── hypridle.conf            # Idle & screen lock behavior
+│   │   ├── hyprlock.conf            # Lock screen config
+│   │   ├── webappsbinds.conf        # Web app keybindings
 │   │   └── workspace.conf           # Workspace & monitor setup
-│   ├── waybar/                      # Status bar (top panel) config
+│   ├── waybar/                      # Status bar
 │   │   ├── config.jsonc
 │   │   └── style.css
-│   ├── wofi/                        # App launcher config
+│   ├── wofi/                        # App launcher
 │   │   ├── config
 │   │   ├── style.css
 │   │   └── SearchBarStyle.css
-│   └── btop/                        # System monitor theme
+│   └── btop/                        # System monitor
 │       ├── btop.conf
 │       └── theme/
 ├── theme/                            # Theming files
-│   ├── gtkThemes/                   # GTK themes
+│   ├── gtkThemes/
 │   │   └── Graphite-Dark/           # Dark GTK theme (→ ~/.themes/)
-│   └── Obsidian/                    # Obsidian vault themes
+│   └── Obsidian/
 │       └── pitchBlack/              # Pitch Black Obsidian theme (optional)
-├── icon/                            # App launcher icons
-│   ├── chatgpt.png
-│   ├── claude.png
-│   ├── google-*.png
-│   └── ... (web app icons)
-├── wallpaper/                       # Desktop wallpapers
-│   ├── wall1.png
-│   ├── wall2.png
-│   └── ... (5 total wallpapers)
-├── install.sh                       # Installation script (creates symlinks & backups)
-├── uninstall.sh                     # Uninstallation script (removes symlinks & restores backups)
-├── OriginalConfigFolders/           # Backup folder for original configs (auto-populated)
-├── tools.conf                       # Documentation of required system tools
+├── icon/                            # Web app launcher icons
+├── wallpaper/                       # Desktop wallpapers (5 total)
+├── install.sh                       # Installs everything
+├── uninstall.sh                     # Removes symlinks & restores backups
+├── tools.conf                       # Required system tools reference
 ├── README.md                        # This file
-└── PreviewImage*.png                # Screenshot previews
+└── PreviewImage*.png                # Screenshots
 ```
 
-## Configuration Interconnections
+## What Gets Installed
 
+| Component | Source | Target | Notes |
+| --- | --- | --- | --- |
+| **Hyprland Config** | `config/hypr/` | `~/.config/hypr/` | Wayland compositor config |
+| **Waybar** | `config/waybar/` | `~/.config/waybar/` | Status bar config |
+| **Wofi** | `config/wofi/` | `~/.config/wofi/` | App launcher config |
+| **Btop** | `config/btop/` | `~/.config/btop/` | System monitor theme |
+| **Custom Scripts** | `bin/` | `~/.local/bin/` | Brightness, wofi drawer, etc. |
+| **GTK Theme** | `theme/gtkThemes/Graphite-Dark/` | `~/.themes/` | Auto-applied via gsettings |
+
+---
+
+# Hyprshot
+
+Hyprshot is the screenshot utility used in this setup. It's integrated via these keybindings:
+
+| Keybinding | Action |
+|---|---|
+| `Print` | Capture current monitor |
+| `Super + Print` | Capture active window |
+| `Shift + Print` | Capture region (drag to select) |
+
+## Installation
+
+The install script will prompt you automatically. Select option **1** to auto-install.
+
+### Manual Installation
+
+```bash
+# 1. Clone
+git clone https://github.com/Gustash/hyprshot.git ~/Hyprshot
+
+# 2. Make executable
+chmod +x ~/Hyprshot/hyprshot
+
+# 3. Symlink
+mkdir -p ~/.local/bin
+ln -s ~/Hyprshot/hyprshot ~/.local/bin/hyprshot
+
+# 4. Verify
+hyprshot --help
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                      Core Components                            │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  .bashrc (Shell)                                                │
-│  ├─ Loads environment variables for system tools                │
-│  ├─ Defines aliases & custom functions                          │
-│  └─ Sets CURRENT_WALLPAPER path                                 │
-│                                                                 │
-│  config/hypr/ (Hyprland Compositor)                             │
-│  ├─ hyprland.conf → Calls bin/startup.sh (exec-once)            │
-│  ├─ Binds keybinds to wofiDrawer.sh                             │
-│  ├─ Configures hypridle.conf for idle behavior                  │
-│  └─ References theme colors & icons from icon/ folder           │
-│                                                                 │
-│  config/waybar/ (Status Bar)                                    │
-│  ├─ Displays system info from btop                              │
-│  ├─ Integrates with Hyprland workspaces                         │
-│  └─ Applies Graphite-Dark GTK theme styling                     │
-│                                                                 │
-│  bin/ (Utility Scripts)                                         │
-│  ├─ Called by hyprland.conf keybinds                            │
-│  ├─ Symlinked to ~/.local/bin/ for user-wide access             │
-│  └─ Examples: brightness control, app launcher integration      │
-│                                                                 │
-│  theme/ (Visual Consistency)                                    │
-│  ├─ GTK theme applied to GTK apps via gsettings                 │
-│  └─ Obsidian theme optional, installed to Obsidian vault        │
-│                                                                 │
-│  icon/ & wallpaper/ (Resources)                                 │
-│  ├─ Icons referenced in webappsbinds.conf                       │
-│  └─ Wallpapers selected in .bashrc                              │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
+
+If `hyprshot` isn't found after install, make sure `~/.local/bin` is in your PATH:
+
+```bash
+export PATH="$HOME/.local/bin:$PATH"
+source ~/.bashrc
+```
+
+## Usage
+
+```bash
+hyprshot -m output    # capture monitor
+hyprshot -m window    # capture window
+hyprshot -m region    # capture region
+hyprshot -m region -o ~/custom.png  # save to custom path
+```
+
+Screenshots are saved to `~/Pictures/Screenshots/` by default.
+
+## Troubleshooting
+
+**Command not found:**
+1. `ls -l ~/.local/bin/hyprshot` — check symlink exists
+2. `echo $PATH | grep .local/bin` — check PATH
+3. Add `export PATH="$HOME/.local/bin:$PATH"` to `~/.bashrc` and re-source
+
+**Screenshot save fails:**
+```bash
+mkdir -p ~/Pictures/Screenshots
+chmod 755 ~/Pictures/Screenshots
+```
+
+**Keybinding not working:**
+1. Check Hyprshot is installed: `command -v hyprshot`
+2. Try the command directly: `hyprshot -m region`
+3. Reload Hyprland: `Super + Escape` → log back in
+
+## Uninstalling
+
+```bash
+rm ~/.local/bin/hyprshot
+rm -rf ~/Hyprshot
 ```
 
 ---
 
-## What Gets Installed
+### Resources
 
-| Component           | Source                           | Target              | Notes                                      |
-| ------------------- | -------------------------------- | ------------------- | ------------------------------------------ |
-| **Hyprland Config** | `config/hypr/`                   | `~/.config/hypr/`   | Wayland compositor configuration           |
-| **Waybar**          | `config/waybar/`                 | `~/.config/waybar/` | Status bar configuration                   |
-| **Wofi**            | `config/wofi/`                   | `~/.config/wofi/`   | App launcher configuration                 |
-| **Btop**            | `config/btop/`                   | `~/.config/btop/`   | System monitor theme                       |
-| **Custom Tools**    | `bin/`                           | `~/.local/bin/`     | Scripts like brightness, wofi drawer, etc. |
-| **Bash Config**     | `.bashrc`                        | `~/.bashrc`         | Shell aliases and environment variables    |
-| **GTK Theme**       | `theme/gtkThemes/Graphite-Dark/` | `~/.themes/`        | Dark GTK+ theme (automatically set)        |
-
-# Hyprshot Installation & Setup
-
-**Hyprshot** is a screenshot utility for Hyprland that captures screenshots in multiple modes (output, window, region). It's integrated into this dotfile setup via the following keybindings:
-
-```
-PRINT              → Capture current output/monitor
-Super + PRINT      → Capture current window
-Shift + PRINT      → Capture region (drag to select)
-```
-
-## Installation
-
-### Automatic Installation (Recommended)
-
-During `./install.sh`, you will be prompted:
-
-```
-Hyprshot is a screenshot utility for Hyprland.
-
-Options:
-  1) Auto install (clone & build from GitHub)
-  2) Manual install (show instructions, you install)
-  0) Skip installation
-```
-
-Select option **1** to automatically:
-- Clone from GitHub
-- Set executable permissions
-- Create symlink to `~/.local/bin/hyprshot`
-- Verify installation
-
-### Manual Installation
-
-If you prefer to install Hyprshot manually, or if auto-installation fails:
-
-#### Step 1: Clone Repository
-
-```bash
-git clone https://github.com/Gustash/hyprshot.git ~/Hyprshot
-```
-
-#### Step 2: Set Executable
-
-```bash
-chmod +x ~/Hyprshot/hyprshot
-```
-
-#### Step 3: Create Symlink
-
-```bash
-mkdir -p ~/.local/bin
-ln -s ~/Hyprshot/hyprshot ~/.local/bin/hyprshot
-```
-
-#### Step 4: Ensure ~/.local/bin in PATH (if needed)
-
-Add this to your `~/.bashrc` if `hyprshot` command is not found:
-
-```bash
-export PATH="$HOME/.local/bin:$PATH"
-```
-
-Then reload your shell:
-
-```bash
-source ~/.bashrc
-```
-
-#### Step 5: Verify Installation
-
-```bash
-hyprshot --help
-```
-
-You should see the help output with usage instructions.
-
-## Usage
-
-### Command Line
-
-```bash
-# Capture current output (monitor/screen)
-hyprshot -m output
-
-# Capture active window
-hyprshot -m window
-
-# Capture region (drag to select)
-hyprshot -m region
-```
-
-### Via Hyprland Keybindings
-
-All three modes are available via keybindings (see `config/hypr/hyprland.conf` lines 186-188):
-
-| Keybinding | Action |
-|---|---|
-| `PRINT` | Capture output |
-| `Super + PRINT` | Capture window |
-| `Shift + PRINT` | Capture region |
-
-### Output Location
-
-Screenshots are saved to:
-
-```
-~/Pictures/Screenshots/  (default location, Hyprshot creates if missing)
-```
-
-Or use `hyprshot` with the `-o` flag to specify output:
-
-```bash
-hyprshot -m region -o ~/custom-screenshot.png
-```
-
-## Troubleshooting
-
-### Hyprshot command not found
-
-**Problem:** After installation, `hyprshot` command not found in terminal.
-
-**Solution:**
-1. Verify installation: `ls -l ~/.local/bin/hyprshot`
-2. Verify PATH: `echo $PATH | grep ~/.local/bin`
-3. If not in PATH, add to `~/.bashrc`: `export PATH="$HOME/.local/bin:$PATH"`
-4. Reload shell: `source ~/.bashrc`
-
-### Screenshot save fails
-
-**Problem:** Error saving screenshot to default location.
-
-**Solution:**
-1. Create Pictures directory: `mkdir -p ~/Pictures/Screenshots`
-2. Set permissions: `chmod 755 ~/Pictures/Screenshots`
-3. Try again with custom output: `hyprshot -m region -o ~/test.png`
-
-### Keybinding not working
-
-**Problem:** Hyprland keybindings for screenshots don't work.
-
-**Solutions:**
-1. Verify Hyprshot is installed: `command -v hyprshot`
-2. Restart Hyprland: Press `Super + Escape` to logout, then login again
-3. Check keybindings in `config/hypr/hyprland.conf`
-4. Try command directly: `hyprshot -m region`
-
-### Requires Python/Dependencies
-
-**Problem:** `hyprshot: command not found` or version mismatch.
-
-**Solution:**
-Hyprshot requires Python. Ensure it's installed:
-
-```bash
-python3 --version  # Should be Python 3.6+
-```
-
-If missing: `sudo apt install python3`
-
-## Uninstalling Hyprshot
-
-To remove Hyprshot:
-
-1. **Manual Removal**:
-   ```bash
-   # Remove symlink
-   rm ~/.local/bin/hyprshot
-
-   # Remove source (optional)
-   rm -rf ~/Hyprshot
-   ```
-
-## Additional Resources
-
-- **Hyprshot Repository:** https://github.com/Gustash/hyprshot
-- **Hyprland Wiki - Bindings:** https://wiki.hyprland.org/Configuring/Binds/
-- **Hyprland Wiki - Keybind Codes:** https://wiki.hyprland.org/Configuring/Binds/#key-names
+- [Hyprshot Repository](https://github.com/Gustash/hyprshot)
+- [Hyprland Wiki — Bindings](https://wiki.hyprland.org/Configuring/Binds/)

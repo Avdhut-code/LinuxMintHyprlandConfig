@@ -14,9 +14,9 @@ hypridle >/dev/null 2>&1 &
 sleep 1 # extra stability buffer
 
 ### --- Start custom btop moniter
-$HOME/.local/bin/custom-launch-btop.sh
+custom-launch-btop
 
 ### --- Start brightness to default
-$HOME/.local/bin/brightnessCheck.sh resetToDefault
+brightnessCheck.sh resetToDefault
 
 ### --- Put your startup tools here --- ###

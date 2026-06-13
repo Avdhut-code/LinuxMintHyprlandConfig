@@ -1,9 +1,7 @@
 # === HYPRLAND CONFIG START ===
 
-export PATH="\$HOME/.local/bin:\$PATH"
-
 # Point to the permanent dotfiles suite location
-export REPO_ROOT="$TARGET_DIR"
+export TARGET_DIR="$HOME/.local/share/LinuxMintHyprlandConfig/"
 
 # Uncomment if you want to show neofetch on terminal intitalization/opening
 #if command -v neofetch >/dev/null 2>&1; then
@@ -26,10 +24,10 @@ export CURRENT_WALLPAPER="${TARGET_DIR}/wallpaper/wall1.png"
 
 export DEFAULT_FILE=""
 
-function get_bright() {
-  sudo ddcutil --bus 2 getvcp 10 | grep -oP 'current value =\s+\K\d+'
-}
-export BRIGHTNESS=$(get_bright)
+# function get_bright() {
+#   sudo ddcutil getvcp 10 | grep -oP 'current value =\s+\K\d+'
+# }
+# export BRIGHTNESS=$(get_bright)
 
 # Make prompt bright bold neon green,purple keep output white.
 # PS1=' \[\033[1;32m\]\w >\[\033[0m\] ' ## neon-green
@@ -46,4 +44,5 @@ alias F1="sudo systemctl poweroff"
 alias ~="cd ~"
 
 alias ..="cd .."
+
 # === HYPRLAND CONFIG END ===

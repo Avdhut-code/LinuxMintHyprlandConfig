@@ -65,12 +65,13 @@ installPackage(){
 		pavucontrol \
 		wireplumber \      
 		pipewire \
-		swaync \
+		# swaync \
 		swaybg \
 		playerctl \
+		waybar \
 		wofi \
 		gnome-terminal \
-		gnome-calendar \
+		# gnome-calendar \
 		evince \
 		xed \
 		nemo \
@@ -143,6 +144,16 @@ simlinkCreate() {
 	ln -sfn "${TARGET_DIR}/bin/startup.sh"            "${HOME}/.local/bin/startup"
 	ln -sfn "${TARGET_DIR}/bin/wofiDrawer.sh"         "${HOME}/.local/bin/wofiDrawer"
 
+	log_info "Setting script permissions..."
+	
+	chmod +x "${TARGET_DIR}/bin/brightnessCheck.sh"
+	chmod +x "${TARGET_DIR}/bin/codecho.sh"
+	chmod +x "${TARGET_DIR}/bin/custom-launch-btop.sh"
+	chmod +x "${TARGET_DIR}/bin/custom-open-link.sh"
+	chmod +x "${TARGET_DIR}/bin/gnome-terExit.sh"
+	chmod +x "${TARGET_DIR}/bin/startup.sh"
+	chmod +x "${TARGET_DIR}/bin/wofiDrawer.sh"
+
 	log_info "GTK theme:"
 
 	mkdir -p "${HOME}/.themes"
@@ -183,7 +194,7 @@ themeApply() {
 hyprshotInstall() {
 	if [ ! -t 0 ]; then
 		log_info "Non-interactive shell detected, skipping."
-	return
+		return
 	fi
 
 	echo "  [1] Auto install from GitHub"
@@ -218,24 +229,93 @@ hyprshotInstall() {
   	esac
 }
 
+walkInstall() {
+	if command -v walk &>/dev/null; then
+		log_success "Walk is already installed, skipping."
+		return
+	fi
+
+	log_info "Cloning walk..."   #### ADD THE CASE OPTIONAL INSATALL LIKE HYPRSHOT
+
+	echo "  [1] Auto install from GitHub"
+	echo "  [2] Manual install (show instructions)"
+	echo "  [3] Skip"
+	read -rp "Select option [1/2/3]: " walkChoice
+	
+	case "$walkChoice" in
+	1)
+	if git clone https://github.com/antonmedv/walk.git "${HOME}/walk" 2>/dev/null; then
+		log_info "Running walk install script..."
+		if bash "${HOME}/walk/install.sh"; then
+			log_success "Walk installed successfully"
+		else
+		l	og_warning "Walk install script failed"
+		fi
+	else
+		log_warning "Failed to clone walk"
+	fi
+	;;
+	2)
+      	echo """
+		Manual Walk Installation:
+			1. git clone https://github.com/antonmedv/walk.git ~/walk
+			2. chmod +x ~/walk/install.sh
+			3. bash ~/walk/install.sh
+	"""
+	;;
+	3|*)
+		log_info "Walk installation skipped"
+	;;
+	esac
+
+}
+
 installObsidian() {
-    log_info "Installing Obsidian..."
+	# log_info "Installing Obsidian..."
 
-    # get latest version number from GitHub API
-    local version
-    version=$(curl -s https://api.github.com/repos/obsidianmd/obsidian-releases/releases/latest \
-        | grep '"tag_name"' | cut -d'"' -f4 | tr -d 'v')
+	echo "  [1] Auto install from GitHub"
+	echo "  [2] Manual install (show instructions)"
+	echo "  [3] Skip"
+	read -rp "Select option [1/2/3]: " obsidianChoice
+	
+	case "$obsidianChoice" in
+	1)
+	log_info "Installing latest version..."
+	
+	local version
 
-    local deb_url="https://github.com/obsidianmd/obsidian-releases/releases/download/v${version}/obsidian_${version}_amd64.deb"
-    local deb_path="/tmp/obsidian_${version}.deb"
+	version=$(curl -s https://api.github.com/repos/obsidianmd/obsidian-releases/releases/latest \
+		| grep '"tag_name"' | cut -d'"' -f4 | tr -d 'v')
 
-    if curl -L "$deb_url" -o "$deb_path"; then
-        sudo apt install -y "$deb_path"
-        rm "$deb_path"
-        log_success "Obsidian ${version} installed"
-    else
-        log_warning "Failed to download Obsidian, install it manually from https://obsidian.md"
-    fi
+	local deb_url="https://github.com/obsidianmd/obsidian-releases/releases/download/v${version}/obsidian_${version}_amd64.deb"
+	
+	local deb_path="/tmp/obsidian_${version}.deb"
+
+	if curl -L "$deb_url" -o "$deb_path"; then
+		sudo apt install -y "$deb_path"
+		rm "$deb_path"
+		log_success "Obsidian ${version} installed"
+		log_info "Now you can add the obsidian dark theme to your vault"
+	else
+		log_warning "Failed to download Obsidian, install it manually from https://obsidian.md"
+	fi
+	;;
+	2)
+      	echo """
+		Manual Obsidian Installation:
+			1. got to https://obsidian.md/download
+			2. download the appropriate package for you system
+			3. got to the download directory and run "sudo apt install ./obsidian_*.deb"
+			4. install it with "sudo apt install ./path/to/obsidian_*.deb"
+			5. remove the .deb file after installation with "rm ./path/to/obsidian_*.deb"
+			6. Now you can add the obsidian dark theme to your vault
+	"""
+	
+	;;
+	3|*)
+		log_info "Obsidian installation skipped"
+	;;
+	esac
 }
 
 main() {
@@ -254,8 +334,8 @@ main() {
 	continue_install=${continue_install:-n}
 
 	if [[ ! $continue_install =~ ^[Yy]$ ]]; then
-	log_warning "Installation cancelled"
-	exit 0
+		log_warning "Installation cancelled"
+		exit 0
 	fi
 
   	log_section "Pre-Installation Checks"
@@ -282,7 +362,13 @@ main() {
 	log_section "Hyprshot Installation (Optional)"
 	hyprshotInstall
 
-  	log_section " Install Done."
+	log_section "Walk Installation (Optional)"
+	walkInstall
+
+	log_section "Obsidian Installation (Optional)"
+	installObsidian
+
+	log_section " Install Done."
 
 	log_success "Installation completed successfully!"
 }

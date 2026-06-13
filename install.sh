@@ -61,17 +61,15 @@ installPackage(){
 		ddcutil \
 		btop \
 		htop \
-		libnotify-bin \    
+		libnotify-bin \
 		pavucontrol \
-		wireplumber \      
+		wireplumber \
 		pipewire \
-		# swaync \
 		swaybg \
 		playerctl \
 		waybar \
 		wofi \
 		gnome-terminal \
-		# gnome-calendar \
 		evince \
 		xed \
 		nemo \
@@ -79,6 +77,8 @@ installPackage(){
 	sudo apt autoremove -y
 	sudo apt clean -y
 
+		# swaync \
+		# gnome-calendar \
 	log_success "System packages installed successfully"
 }
 
@@ -173,27 +173,64 @@ bashAppend() {
 	return
 	fi
 
-	if [ -f "$ORIGINAL_DIR/bashAppend.txt" ]; then
-		cat "$ORIGINAL_DIR/bashAppend.txt" >> "${HOME}/.bashrc"
+	if [ -f "$ORIGINAL_DIR/bashAppend.sh" ]; then
+		cat "$ORIGINAL_DIR/bashAppend.sh" >> "${HOME}/.bashrc"
+		source "${HOME}/.bashrc"
 		log_success ".bashrc configured with path export and environment variables"
 	else
-		log_warning "bashAppend.txt not found, skipping .bashrc modification"
+		log_warning "bashAppend.sh not found, skipping .bashrc modification"
 	fi
 }
 
 themeApply() {
-	if command -v gsettings &>/dev/null; then
-		log_info "Setting GTK theme to Graphite-Dark..."
-		gsettings set org.gnome.desktop.interface gtk-theme "Graphite-Dark" 2>/dev/null && \
-		log_success "GNOME theme set" || log_warning "Could not set GNOME theme"
-	else
-		log_warning "gsettings not available, theme must be applied manually"
-	fi
+    log_info "Applying GTK theme..."
+    local theme="Graphite-Dark"
+
+    local desktop="${XDG_CURRENT_DESKTOP:-}"
+
+    if [ -z "$desktop" ]; then
+        desktop="${DESKTOP_SESSION:-}"
+    fi
+
+    log_info "Detected desktop: ${desktop:-unknown}"
+
+    case "${desktop,,}" in  # ,, = lowercase the string
+        *xfce*)
+            xfconf-query -c xsettings -p /Net/ThemeName -s "$theme" 2>/dev/null \
+                && log_success "XFCE theme set" \
+                || log_warning "xfconf-query failed — install xfce4-settings"
+            ;;
+        *cinnamon*)
+            gsettings set org.cinnamon.desktop.interface gtk-theme "$theme" 2>/dev/null \
+                && log_success "Cinnamon theme set" \
+                || log_warning "Could not set Cinnamon theme"
+            ;;
+        *gnome*)
+            gsettings set org.gnome.desktop.interface gtk-theme "$theme" 2>/dev/null \
+                && log_success "GNOME theme set" \
+                || log_warning "Could not set GNOME theme"
+            ;;
+        *hyprland*|*sway*|*wlroots*)
+            gsettings set org.gnome.desktop.interface gtk-theme "$theme" 2>/dev/null \
+                && log_success "Wayland session theme set" \
+                || log_warning "Could not set theme"
+            ;;
+        *)
+            log_warning "Unknown desktop: '${desktop}' — trying gsettings anyway"
+            gsettings set org.gnome.desktop.interface gtk-theme "$theme" 2>/dev/null \
+                || log_warning "Theme could not be applied, set it manually"
+            ;;
+    esac
 }
 
 hyprshotInstall() {
 	if [ ! -t 0 ]; then
 		log_info "Non-interactive shell detected, skipping."
+		return
+	fi
+	
+	if command -v hyprshot &>/dev/null; then
+		log_success "hyprshot is already installed, skipping."
 		return
 	fi
 
@@ -271,7 +308,10 @@ walkInstall() {
 }
 
 installObsidian() {
-	# log_info "Installing Obsidian..."
+	if command -v obsidian &>/dev/null; then
+		log_success "obsidian is already installed, skipping."
+		return
+	fi
 
 	echo "  [1] Auto install from GitHub"
 	echo "  [2] Manual install (show instructions)"
@@ -318,6 +358,61 @@ installObsidian() {
 	esac
 }
 
+zenInstall() {
+	if command -v zen &>/dev/null; then
+		log_success "Zen Browser is already installed, skipping."
+		return
+	fi
+
+	echo "  [1] Auto install from GitHub"
+	echo "  [2] Manual install (show instructions)"
+	echo "  [3] Skip"
+	read -rp "Select option [1/2/3]: " choice
+
+	case "$choice" in
+	1)
+		local tarball_url="https://github.com/zen-browser/desktop/releases/latest/download/zen.linux-x86_64.tar.xz"
+		local tarball_path="/tmp/zen.linux-x86_64.tar.xz"
+		local install_dir="${HOME}/zen-browser"
+
+		log_info "Downloading Zen Browser..."
+		if curl -L "$tarball_url" -o "$tarball_path"; then
+
+			log_info "Extracting..."
+			mkdir -p "$install_dir"
+			tar -xf "$tarball_path" -C "$install_dir" --strip-components=1
+
+			log_info "Creating symlink..."
+			ln -sfn "$install_dir/zen" "${HOME}/.local/bin/zen"
+
+			rm "$tarball_path"
+			log_success "Zen Browser installed at: $install_dir"
+		else
+			log_warning "Failed to download Zen Browser"
+		fi
+	;;
+	2)
+	echo """
+
+		Manual Zen Browser Installation:
+			1. Download:
+			"curl -L https://github.com/zen-browser/desktop/releases/latest/download/zen.linux-x86_64.tar.xz -o /tmp/zen.tar.xz"
+
+			2. Extract:
+			"mkdir -p ~/.local/share/zen-browser"
+			"tar -xf /tmp/zen.tar.xz -C ~/.local/share/zen-browser --strip-components=1"
+
+			3. Symlink the binary "ln -sfn ~/.local/share/zen-browser/zen ~/.local/bin/zen"
+
+			4. Verify by running "zen --version"
+	"""
+	;;
+	3|*)
+		log_info "Zen Browser installation skipped"
+	;;
+	esac
+}
+
 main() {
 	log_section "LinuxMintHyprlandConfig Installation"
 
@@ -340,7 +435,6 @@ main() {
 
   	log_section "Pre-Installation Checks"
 	checkIfDebian
-
 	log_section "System Package Installation"
 	installPackage
 
@@ -368,6 +462,9 @@ main() {
 	log_section "Obsidian Installation (Optional)"
 	installObsidian
 
+	log_section "Zen Browser Installation (Optional)"
+	zenInstall
+	
 	log_section " Install Done."
 
 	log_success "Installation completed successfully!"
